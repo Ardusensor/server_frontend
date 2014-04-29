@@ -111,8 +111,8 @@
                     <tbody>
                       <tr ng-repeat="tick in paginatedTicks">
                         <td ng-bind="tick.datetime | human_date"></td>
-                        <td ng-bind="tick.battery_voltage_visual"></td>
-                        <td ng-bind="tick.temperature"></td>
+                        <td ng-bind="tick.battery_voltage_visual | number"></td>
+                        <td ng-bind="tick.temperature | number"></td>
                         <td ng-bind="tick.sensor2"></td>
                         <td ng-bind="tick.radio_quality"></td>
                       </tr>
