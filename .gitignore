@@ -1,7 +1,2 @@
 src/js/*.js
-.ruby-version
-Capfile
-Gemfile
-Gemfile.lock
-config/
-
+public

@@ -1,0 +1,25 @@
+{
+  "crap_version": "1.1",
+  "environments": [
+    {
+      "name": "staging",
+      "default": true,
+      "servers": [
+        {
+          "port": "22",
+          "user": "ardusensor",
+          "ip": "172.16.0.1"
+        }
+      ],
+      "restart_command": "true",
+      "deploydir": "/home/ardusensor/frontend"
+    }
+  ],
+  "built_app_dir": "dist",
+  "app_build_commands": [
+    "mkdir -p dist"
+  ],
+  "asset_build_commands": [
+    "rm -rf public && coffee -c src && rsync -av src public --exclude *.coffee && mv public/src public/assets"
+  ]
+}
