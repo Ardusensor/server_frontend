@@ -1,7 +1,7 @@
 
 default: assets
 
-clean:	
+clean:
 	rm -rf out public
 
 assets: clean
