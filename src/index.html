@@ -78,7 +78,7 @@
                 <div ng-show="!chartView">
                   <div class="text-center">
                     <span class="btn glyphicon glyphicon-arrow-left" ng-click="slideRange(-1)"></span>
-                    <span id="selected-range">
+                    <span class="selected-range">
                       <span ng-bind="chartStart | moment_date"></span>
                        - 
                       <span ng-bind="chartEnd | moment_date"></span>
@@ -131,7 +131,7 @@
                   <div id="wait-overlay" ng-show="processing"></div>
                   <div class="text-center">
                     <span class="btn glyphicon glyphicon-arrow-left" ng-click="slideRange(-1)"></span>
-                    <span id="selected-range">
+                    <span class="selected-range">
                       <span ng-bind="chartStart | moment_date"></span>
                        - 
                       <span ng-bind="chartEnd | moment_date"></span>
