@@ -29,20 +29,18 @@ osp.controller "MainController", ($scope, $http, $location, $filter) ->
   $scope.errorMsg = null
 
   $scope.getUnitForRage = ->
-    if $scope.range == 'Biweek'
-      'Week'
-    else if $scope.range == 'Quarter'
-      'Month'
-    else
-      $scope.range
+    if $scope.range is 'Biweek'
+      return 'Week'
+    if $scope.range is 'Quarter'
+      return 'Month'
+    return $scope.range
 
   $scope.correctAmount = (amount) ->
-    if $scope.range == 'Biweek'
-      amount * 2
-    else if $scope.range == 'Quarter'
-      amount * 3
-    else
-      amount
+    if $scope.range is 'Biweek'
+      return amount * 2
+    if $scope.range is 'Quarter'
+      return amount * 3
+    return amount
 
   $scope.slideRange = (amount) ->
     $scope.chartStart.add($scope.correctAmount(amount), $scope.getUnitForRage())
@@ -55,50 +53,68 @@ osp.controller "MainController", ($scope, $http, $location, $filter) ->
       $scope.sensors = data
       $scope.predicate = 'last_tick'
       if $scope.sensor_url
-        sensor = $filter('get_by_id')($scope.sensors, $scope.sensor_url)
+        sensor = $scope.findbyID $scope.sensors, $scope.sensor_url
       else
         sensor = if $scope.sensors.length > 0 then $scope.sensors[0] else null
       $scope.selectSensor(sensor)
 
+  $scope.findbyID = (input, id) ->
+    for item in input
+      if +item.id is +id
+        return item
+    return null  
+
   $scope.loadTicks = ->
+    if not $scope.selectedSensor
+      $scope.renderTicks null
+      return
     $http.get(host + '/api/sensors/' + $scope.selectedSensor.id + 
       '/ticks?start=' + $scope.chartStart.unix() +
       '&end=' + $scope.chartEnd.unix()).success((data) ->
-        if data is "null"
-          data = null
-        $scope.ticks = if data? then data.reverse() else []
-        $scope.paginatedTicks = $scope.ticks.slice 0, kPageSize
-        $scope.pages = Math.floor $scope.ticks.length / kPageSize
-        $scope.pages += 1 if $scope.ticks.length % kPageSize
-        $scope.page = 1
+        $scope.renderTicks data
     ).error((data, status, headers, config) ->
       $scope.errorMsg = data or status or "Couldn't load list data from backend."
     )
 
+  $scope.renderTicks = (data) ->
+    if data is "null"
+      data = null
+    $scope.ticks = if data? then data.reverse() else []
+    $scope.paginatedTicks = $scope.ticks.slice 0, kPageSize
+    $scope.pages = Math.floor $scope.ticks.length / kPageSize
+    $scope.pages += 1 if $scope.ticks.length % kPageSize
+    $scope.page = 1
+
   $scope.loadSensorData = ->
     if $scope.chartView
       $scope.loadDots()
-    else
-      $scope.loadTicks()
+      return
+    $scope.loadTicks()
 
   $scope.loadDots = ->
-    $scope.processing = true
+    if not $scope.selectedSensor
+      $scope.renderDots []
+      return
     $http.get(host + '/api/sensors/' + $scope.selectedSensor.id + 
       '/dots?start=' + $scope.chartStart.unix() + 
       '&end=' + $scope.chartEnd.unix() +
       '&dots_per_day=' + $scope.dotsPerDay).success((data) ->
-        if data?
-          setTimeout(->
-            ospMap.drawMap data, () ->
-              $scope.$apply(()->
-                $scope.processing = false
-              )
-          , 0)
-        else
-          $scope.errorMsg = "Backend didn't return any usable data"
+        $scope.renderDots data
     ).error((data, status, headers, config) ->
       $scope.errorMsg = data or status or "Couldn't load chart data from backend."
     )
+
+  $scope.renderDots = (data) ->
+    if not data?
+      $scope.errorMsg = "Backend didn't return any usable data"
+      return
+    $scope.processing = true
+    setTimeout(->
+      ospMap.drawMap data, () ->
+        $scope.$apply(()->
+          $scope.processing = false
+        )
+    , 0)
 
   $scope.selectSensor = (sensor) ->
     $scope.selectedSensor = sensor
@@ -131,11 +147,6 @@ osp.controller "MainController", ($scope, $http, $location, $filter) ->
     end = start+kPageSize
     $scope.paginatedTicks = $scope.ticks.slice start, end
 
+# Filters are to be used in HTML markup only
 osp.filter 'human_date', -> (value) -> moment(value).format("DD.MM.YYYY HH:mm")
-osp.filter 'unnamed', -> (value) ->  if value then value else '(unnamed)'
 osp.filter 'moment_date', -> (value) -> value.format("DD.MM.YYYY")
-osp.filter 'get_by_id', -> (input, id) -> 
-  for item in input
-    if +item.id == +id
-      return item
-  return null

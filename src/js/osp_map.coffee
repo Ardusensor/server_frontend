@@ -1,4 +1,3 @@
-# Set up router
 osp_map = angular.module 'osp_map', ->
 
 host = 'http://zeitl.com'
