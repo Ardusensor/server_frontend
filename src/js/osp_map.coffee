@@ -7,16 +7,15 @@ osp_map.controller "MainController", ($scope, $http, $location) ->
   $scope.base = $location.path()
   
   if $scope.base != ""
-    $http.get(host + '/api/controllers' + $scope.base).success (data) ->
-      $scope.selectController(if data then data else null)
+    $http.get(host + '/api/coordinator' + $scope.base).success (data) ->
+      $scope.selectCoordinator(if data then data else null)
   $scope.selectedSensor = null
 
-  $scope.selectController = (controller) ->
-    $scope.selectedController = controller
-    $http.get('http://zeitl.com/api/controllers/' + 
-      $scope.selectedController.id + '/sensors').success(
-        (data) -> $scope.drawMarkers(data)
-      )
+  $scope.selectCoordinator = (coordinator) ->
+    $scope.selectedCoordinator = coordinator
+    $http.get('/api/coordinators/' + $scope.selectedCoordinator.id + '/sensors').success(
+      (data) -> $scope.drawMarkers(data)
+    )
 
   $scope.placeSensor = (sensor) ->
     $scope.selectedSensor = sensor

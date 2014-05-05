@@ -41,13 +41,13 @@
           <span ng-bind='errorMsg'></span>
         </div>
         <div class="row top-15">
-          <div class="col-md-11" ng-show="selectedController">
+          <div class="col-md-11" ng-show="selectedCoordinator">
             <div class="row">
               <div class="col-md-4 pull-left">
-                <div class="input-group controller-name">
+                <div class="input-group coordinator-name">
                   <span class="input-group-addon">Group:</span>
-                  <input type="text" class="form-control" placeholder="Group name" ng-model="selectedController.name"
-                    ng-blur="saveControllerName(controller)">
+                  <input type="text" class="form-control" placeholder="Group name" ng-model="selectedCoordinator.name"
+                    ng-blur="saveCoordinatorName(coordinator)">
                 </div>
               </div>
               

@@ -12,10 +12,10 @@ osp.controller "MainController", ($scope, $http, $location, $filter) ->
   $scope.sensor_url = (if loc_base.length > 3 then loc_base[3] else null)
 
   if $scope.base != ""
-    $http.get(host + '/api/controllers' + $scope.base).success((data) ->
-      $scope.selectController(if data then data else null)
+    $http.get(host + '/api/coordinators' + $scope.base).success((data) ->
+      $scope.selectCoordinator(if data then data else null)
     ).error((data, status, headers, config) ->
-      $scope.errorMsg = "Couldn't find a controller, please check your URL."
+      $scope.errorMsg = data or status or "Couldn't find coordinator, please check your URL."
     )
 
   $scope.range = 'Month'
@@ -49,9 +49,9 @@ osp.controller "MainController", ($scope, $http, $location, $filter) ->
     $scope.chartEnd.add($scope.correctAmount(amount), $scope.getUnitForRage())
     $scope.loadSensorData()
 
-  $scope.selectController = (controller) ->
-    $scope.selectedController = controller
-    $http.get(host + '/api/controllers/' + $scope.selectedController.id + '/sensors').success (data) ->
+  $scope.selectCoordinator = (coordinator) ->
+    $scope.selectedCoordinator = coordinator
+    $http.get(host + '/api/coordinators/' + $scope.selectedCoordinator.id + '/sensors').success (data) ->
       $scope.sensors = data
       $scope.predicate = 'last_tick'
       if $scope.sensor_url
@@ -118,8 +118,8 @@ osp.controller "MainController", ($scope, $http, $location, $filter) ->
       else $scope.dotsPerDay = null
     $scope.loadSensorData()
 
-  $scope.saveControllerName = (controller) ->
-    $http.put(host + '/api/controllers/' + $scope.selectedController.id, $scope.selectedController)
+  $scope.saveCoordinatorName = (coordinator) ->
+    $http.put(host + '/api/coordinators/' + $scope.selectedCoordinator.id, $scope.selectedCoordinator)
 
   $scope.setPage = (page) ->
     page = 1 if page < 1
