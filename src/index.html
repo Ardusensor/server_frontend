@@ -45,8 +45,8 @@
             <div class="row">
               <div class="col-md-4 pull-left">
                 <div class="input-group coordinator-name">
-                  <span class="input-group-addon">Group:</span>
-                  <input type="text" class="form-control" placeholder="Group name" ng-model="selectedCoordinator.name"
+                  <span class="input-group-addon">Coordinator:</span>
+                  <input type="text" class="form-control" placeholder="Coordinator name" ng-model="selectedCoordinator.name"
                     ng-blur="saveCoordinatorName(coordinator)">
                 </div>
               </div>
@@ -83,7 +83,7 @@
                        - 
                       <span ng-bind="chartEnd | moment_date"></span>
                       <span class="dropdown">
-                        <span class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <span class="dropdown-toggle" data-toggle="dropdown">
                           (<span ng-bind="range"></span><span class="caret"></span>)
                         </span>
                         <ul class="dropdown-menu text-left">
