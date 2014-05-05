@@ -70,7 +70,7 @@ osp.controller "MainController", ($scope, $http, $location, $filter) ->
         $scope.pages += 1 if $scope.ticks.length % kPageSize
         $scope.page = 1
     ).error((data, status, headers, config) ->
-      $scope.errorMsg = "Couldn't load list data from backend."
+      $scope.errorMsg = data or status or "Couldn't load list data from backend."
     )
 
   $scope.loadSensorData = ->
@@ -95,7 +95,7 @@ osp.controller "MainController", ($scope, $http, $location, $filter) ->
         else
           $scope.errorMsg = "Backend didn't return any usable data"
     ).error((data, status, headers, config) ->
-      $scope.errorMsg = "Couldn't load chart data from backend."
+      $scope.errorMsg = data or status or "Couldn't load chart data from backend."
     )
 
   $scope.selectSensor = (sensor) ->
