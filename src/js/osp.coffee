@@ -64,7 +64,9 @@ osp.controller "MainController", ($scope, $http, $location, $filter) ->
     $http.get(host + '/api/sensors/' + $scope.selectedSensor.id + 
       '/ticks?start=' + $scope.chartStart.unix() +
       '&end=' + $scope.chartEnd.unix()).success((data) ->
-        $scope.ticks = data.reverse()
+        if data is "null"
+          data = null
+        $scope.ticks = if data? then data.reverse() else []
         $scope.paginatedTicks = $scope.ticks.slice 0, kPageSize
         $scope.pages = Math.floor $scope.ticks.length / kPageSize
         $scope.pages += 1 if $scope.ticks.length % kPageSize
