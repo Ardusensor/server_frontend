@@ -20,6 +20,6 @@
     "mkdir -p dist"
   ],
   "asset_build_commands": [
-    "rm -rf public && coffee -c src && rsync -av src public --exclude *.coffee && mv public/src public/assets"
+    "make assets"
   ]
 }
