@@ -118,7 +118,11 @@ osp.controller "MainController", ($scope, $http, $location, $filter) ->
         )
     , 0)
 
+  $scope.setURI = (sensor) ->
+    document.location.hash = $scope.base + "/" + sensor.id
+
   $scope.selectSensor = (sensor) ->
+    $scope.setURI(sensor)
     $scope.selectedSensor = sensor
     $scope.loadSensorData()
 
