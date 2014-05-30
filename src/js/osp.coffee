@@ -60,7 +60,7 @@ osp.controller "MainController", ($scope, $http, $location, $filter) ->
 
   $scope.findbyID = (input, id) ->
     for item in input
-      if +item.id is +id
+      if item.id is id
         return item
     return null  
 
