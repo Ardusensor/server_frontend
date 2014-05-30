@@ -5,7 +5,7 @@ uiCharts.hueChart = null
 uiCharts.batChart = null
 uiCharts.sigChart = null
 
-uiCharts.putData = (labels, data, container, chart) ->
+uiCharts.putData = (labels, data, container, chart, min, max) ->
 	return if data.length == 0
 
 	chart = null
@@ -18,7 +18,8 @@ uiCharts.putData = (labels, data, container, chart) ->
 		renderer: 'line',
 		height: 200,
 		width: 600,
-		min: 'auto',
+		min: min,
+		max: max,
 		series: [
 			data: data,
 			color: "#c05020"
@@ -69,10 +70,10 @@ uiCharts.drawChart = (data, done) ->
 		signal.push({x: (idx + 1), y: (if model.radio_quality? then parseInt(model.radio_quality) else null)})
 	)
 
-	uiCharts.putData(labels, temp, '#temp', uiCharts.tempChart)
-	uiCharts.putData(labels, hue, '#hue', uiCharts.hueChart)
-	uiCharts.putData(labels, battery, '#battery', uiCharts.batChart)
-	uiCharts.putData(labels, signal, '#signal', uiCharts.sigChart)
+	uiCharts.putData(labels, temp, '#temp', uiCharts.tempChart, -20, 40)
+	uiCharts.putData(labels, hue, '#hue', uiCharts.hueChart, 500, 1400)
+	uiCharts.putData(labels, battery, '#battery', uiCharts.batChart, 2.5, 3.5)
+	uiCharts.putData(labels, signal, '#signal', uiCharts.sigChart, "auto")
 
 	if done?
 		done()
