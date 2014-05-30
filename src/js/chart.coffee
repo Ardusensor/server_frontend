@@ -1,11 +1,11 @@
-window.ospMap = {}
+window.uiCharts = {}
 
-ospMap.tempChart = null
-ospMap.hueChart = null
-ospMap.batChart = null
-ospMap.sigChart = null
+uiCharts.tempChart = null
+uiCharts.hueChart = null
+uiCharts.batChart = null
+uiCharts.sigChart = null
 
-ospMap.putData = (labels, data, container, chart) ->
+uiCharts.putData = (labels, data, container, chart) ->
 	return if data.length == 0
 
 	chart = null
@@ -54,8 +54,7 @@ ospMap.putData = (labels, data, container, chart) ->
 
 	chart.render()
 
-
-ospMap.drawMap = (data, done) ->
+uiCharts.drawChart = (data, done) ->
 	labels = []
 	temp = []
 	hue = []
@@ -70,10 +69,10 @@ ospMap.drawMap = (data, done) ->
 		signal.push({x: (idx + 1), y: (if model.radio_quality? then parseInt(model.radio_quality) else null)})
 	)
 
-	ospMap.putData(labels, temp, '#temp', ospMap.tempChart)
-	ospMap.putData(labels, hue, '#hue', ospMap.hueChart)
-	ospMap.putData(labels, battery, '#battery', ospMap.batChart)
-	ospMap.putData(labels, signal, '#signal', ospMap.sigChart)
+	uiCharts.putData(labels, temp, '#temp', uiCharts.tempChart)
+	uiCharts.putData(labels, hue, '#hue', uiCharts.hueChart)
+	uiCharts.putData(labels, battery, '#battery', uiCharts.batChart)
+	uiCharts.putData(labels, signal, '#signal', uiCharts.sigChart)
 
 	if done?
 		done()

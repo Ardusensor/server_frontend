@@ -1,10 +1,10 @@
-osp = angular.module 'osp', ->
+ui = angular.module 'ui', ->
 
 host = 'http://ardusensor.com'
 
 kPageSize = 400
 
-osp.controller "MainController", ($scope, $http, $location, $filter) ->
+ui.controller "MainController", ($scope, $http, $location, $filter) ->
   $scope.setVariablesFromHashbang = (hashbang) ->
     $scope.base = "/" + hashbang[1] + "/" + hashbang[2]
     $scope.sensor_url = (if hashbang.length > 3 then hashbang[3] else null)
@@ -124,7 +124,7 @@ osp.controller "MainController", ($scope, $http, $location, $filter) ->
       return
     $scope.processing = true
     setTimeout(->
-      ospMap.drawMap data, () ->
+      uiCharts.drawChart data, () ->
         $scope.$apply(()->
           $scope.processing = false
         )
@@ -182,7 +182,7 @@ osp.controller "MainController", ($scope, $http, $location, $filter) ->
   $scope.isEditingCoordinatorLabel = -> $scope.editingCoordinatorLabel
 
 # Filters are to be used in HTML markup only
-osp.filter 'human_date', -> (value) -> moment(value).format("DD.MM.YYYY HH:mm")
-osp.filter 'moment_date', -> (value) -> value.format("DD.MM.YYYY")
-osp.filter 'last_four', -> (value) -> value.substr(value.length - 4, 4)
-osp.filter 'valid_uri', -> (sensor, scope) -> scope.buildURI(sensor)
+ui.filter 'human_date', -> (value) -> moment(value).format("DD.MM.YYYY HH:mm")
+ui.filter 'moment_date', -> (value) -> value.format("DD.MM.YYYY")
+ui.filter 'last_four', -> (value) -> value.substr(value.length - 4, 4)
+ui.filter 'valid_uri', -> (sensor, scope) -> scope.buildURI(sensor)
