@@ -1,6 +1,9 @@
 body {
   padding-top: 50px;
 }
+#ardulogo {
+	padding: 10px 25px;
+}
 .starter-template {
   padding: 40px 15px;
 }
