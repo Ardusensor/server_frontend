@@ -31,6 +31,7 @@ osp.controller "MainController", ($scope, $http, $location, $filter) ->
   $scope.pages = 1
   $scope.dotsPerDay = 12
   $scope.errorMsg = null
+  $scope.latestCoordinatorReading = null
 
   $scope.editingCoordinatorLabel = false
 
@@ -54,8 +55,14 @@ osp.controller "MainController", ($scope, $http, $location, $filter) ->
     $scope.setURI()
     $scope.loadSensorData()
 
+  $scope.getLatestCoordinatorReading = (coordinator) ->
+    $http.get(host + '/api/coordinators/' + $scope.selectedCoordinator.id + '/readings?start=0&end=0').success((data) ->
+      $scope.latestCoordinatorReading = data[0]
+    )
+
   $scope.selectCoordinator = (coordinator) ->
     $scope.selectedCoordinator = coordinator
+    $scope.getLatestCoordinatorReading(coordinator)
     $http.get(host + '/api/coordinators/' + $scope.selectedCoordinator.id + '/sensors').success (data) ->
       $scope.sensors = data
       $scope.predicate = 'last_tick'

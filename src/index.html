@@ -43,10 +43,10 @@
         <div class="row top-15">
           <div class="col-md-11" ng-show="selectedCoordinator">
             <div class="row">
-              <div class="col-md-4 pull-left">
+              <div class="col-md-3 pull-left">
                 <div class="input-group coordinator-name">
                   <span class="input-group-addon">Coordinator:</span>
-                  <span ng-bind="selectedCoordinator.id"></span>
+                  <span ng-bind="selectedCoordinator.id" class="form-control"></span>
                   <span
                     ng-class="{'label-info': selectedCoordinator.label, 'label-default': !selectedCoordinator.label, 'label': true}"
                     ng-bind="selectedCoordinator.label || 'Add label'"
@@ -57,6 +57,15 @@
                     ng-model="selectedCoordinator.label"
                     ng-show="selectedCoordinator.editingLabel"
                     ng-blur="saveCoordinatorLabel(selectedCoordinator)">
+                </div>
+              </div>
+              <div class="col-md-3 pull-left">
+                <div class="input-group">
+                  <span class="input-group-addon">GSM:</span>
+                  <span ng-bind="latestCoordinatorReading.gsm_coverage" class="form-control"></span>
+
+                  <span class="input-group-addon">Volt:</span>
+                  <span ng-bind="latestCoordinatorReading.battery_voltage" class="form-control"></span>
                 </div>
               </div>
               
