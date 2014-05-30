@@ -6,12 +6,15 @@ host = 'http://ardusensor.com'
 kPageSize = 50
 
 osp.controller "MainController", ($scope, $http, $location, $filter) ->
-  loc_base = $location.path().split("/")
-  $scope.base = "/" + loc_base[1] + "/" + loc_base[2]
+  $scope.setVariablesFromHashbang = (hashbang) ->
+    $scope.base = "/" + hashbang[1] + "/" + hashbang[2]
+    $scope.sensor_url = (if hashbang.length > 3 then hashbang[3] else null)
+    $scope.range = (if hashbang.length > 4 then hashbang[4] else 'Month')
+    $scope.chartStart = (if hashbang.length > 5 then moment.utc(hashbang[5], 'X') else moment().subtract(1, 'month'))
+    $scope.chartEnd = (if hashbang.length > 6 then moment.utc(hashbang[6], 'X') else moment())
 
-  $scope.sensor_url = (if loc_base.length > 3 then loc_base[3] else null)
-  $scope.range = (if loc_base.length > 4 then loc_base[4] else null)
-
+  $scope.setVariablesFromHashbang($location.path().split("/"))
+  
   if $scope.base != ""
     $http.get(host + '/api/coordinators' + $scope.base).success((data) ->
       $scope.selectCoordinator(if data then data else null)
@@ -19,13 +22,10 @@ osp.controller "MainController", ($scope, $http, $location, $filter) ->
       $scope.errorMsg = data or status or "Couldn't find coordinator, please check your URL."
     )
 
-  $scope.range ||= 'Month'
   $scope.chartView = true
   $scope.ticks = []
   $scope.page = 1
   $scope.pages = 1
-  $scope.chartStart = moment().subtract(1, 'month')
-  $scope.chartEnd = moment()
   $scope.dotsPerDay = 12
   $scope.errorMsg = null
 
@@ -48,6 +48,7 @@ osp.controller "MainController", ($scope, $http, $location, $filter) ->
   $scope.slideRange = (amount) ->
     $scope.chartStart.add($scope.correctAmount(amount), $scope.getUnitForRage())
     $scope.chartEnd.add($scope.correctAmount(amount), $scope.getUnitForRage())
+    $scope.setURI()
     $scope.loadSensorData()
 
   $scope.selectCoordinator = (coordinator) ->
@@ -120,9 +121,14 @@ osp.controller "MainController", ($scope, $http, $location, $filter) ->
     , 0)
 
   $scope.buildURI = (sensor) ->
-    $scope.base + "/" + sensor.id + "/" + $scope.range
+    $scope.base + "/" + 
+    sensor.id + "/" + 
+    $scope.range + "/" + 
+    $scope.chartStart.unix() + "/" + 
+    $scope.chartEnd.unix()
 
   $scope.setURI = (sensor) ->
+    sensor ||= $scope.selectedSensor
     document.location.hash = $scope.buildURI(sensor)
 
   $scope.selectSensor = (sensor) ->
@@ -144,6 +150,7 @@ osp.controller "MainController", ($scope, $http, $location, $filter) ->
       when 'Biweek' then $scope.dotsPerDay = 24
       when 'Week' then $scope.dotsPerDay = 24
       else $scope.dotsPerDay = null
+    $scope.setURI()
     $scope.loadSensorData()
 
   $scope.saveCoordinatorLabel = (coordinator) ->
