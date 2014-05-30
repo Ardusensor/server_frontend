@@ -45,10 +45,10 @@
         <div class="row top-15">
           <div class="col-md-11" ng-show="selectedCoordinator">
             <div class="row">
-              <div class="col-md-3 pull-left">
+              <div class="col-md-4 pull-left">
                 <div class="input-group coordinator-name">
                   <span class="input-group-addon">Coordinator:</span>
-                  <span ng-bind="selectedCoordinator.id" class="form-control"></span>
+                  <span ng-bind="selectedCoordinator.id"></span>
                   <span
                     ng-class="{'label-info': selectedCoordinator.label, 'label-default': !selectedCoordinator.label, 'label': true}"
                     ng-bind="selectedCoordinator.label || 'Add label'"
@@ -61,7 +61,7 @@
                     ng-blur="saveCoordinatorLabel(selectedCoordinator)">
                 </div>
               </div>
-              <div class="col-md-3 pull-left">
+              <div class="col-md-4 pull-left">
                 <div class="input-group">
                   <span class="input-group-addon">GSM:</span>
                   <span ng-bind="latestCoordinatorReading.gsm_coverage" class="form-control"></span>
@@ -79,13 +79,13 @@
             </div>
             <div class="clearfix"></div>
             <div class="row top-15">
-              <div class="col-md-3">
+              <div class="col-md-4">
                 <table class="table table-striped" id="sensors-list">
                   <thead>
                     <tr>
                       <th>Sensor</th>
                       <th>Label</th>
-                      <th>Last reading</th>
+                      <th colspan="2">Last reading</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -101,14 +101,25 @@
                           autofocus="autofocus"
                           ng-model="sensor.label"
                           ng-show="sensor.editingLabel"
-                          ng-blur="saveSensorLabel(sensor)">
+                          ng-blur="saveSensor(sensor)">
                         </td>
                       <td ng-bind="sensor.last_tick | human_date"></td>
+                      <td>
+                        <input type="button" class="btn btn-default btn-xs"
+                          ng-hide="sensor.calibrating"
+                          ng-click="sensor.calibrating=true"
+                          value="Calibrate">
+                        <input type="number" step="0.1" class="form-control" placeholder="0"
+                          autofocus="autofocus"
+                          ng-model="sensor.current_temperature"
+                          ng-show="sensor.calibrating"
+                          ng-blur="saveSensor(sensor)">
+                      </td>
                     </tr>
                   </tbody>
                 </table>
               </div>
-              <div class="col-md-9">
+              <div class="col-md-8">
                 <div ng-show="!chartView">
                   <div class="text-center">
                     <span class="btn glyphicon glyphicon-arrow-left" ng-click="slideRange(-1)"></span>
@@ -184,7 +195,8 @@
                     </span>
                     <span class="btn glyphicon glyphicon-arrow-right" ng-click="slideRange(1)"></span>
                   </div>  
-                  <h4>Temperature</h4>
+                  <h4>Temperature</h4><span class="label label-warning"
+                    ng-show="!selectedSensor.calibration_constant">Not calibrated</span>
                   <div id="temp" class="chart_container">
                     <div class="y_axis"></div>
                     <div class="chart"></div>

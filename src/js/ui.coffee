@@ -161,10 +161,13 @@ ui.controller "MainController", ($scope, $http, $location, $filter) ->
 
   $scope.saveCoordinatorLabel = (coordinator) ->
     $http.put(host + '/api/coordinators/' + coordinator.id, coordinator)
-    coordinator.edi = false
+    coordinator.editingLabel = false
 
-  $scope.saveSensorLabel = (sensor) ->
-    $http.put(host + '/api/sensors/' + sensor.id, sensor)
+  $scope.saveSensor = (sensor) ->
+    $http.put(host + '/api/sensors/' + sensor.id, sensor).success((data) ->
+      sensor = data
+    )
+    sensor.calibrating = false
     sensor.editingLabel = false
 
   $scope.setPage = (page) ->
@@ -174,8 +177,6 @@ ui.controller "MainController", ($scope, $http, $location, $filter) ->
     start = kPageSize*($scope.page-1)
     end = start+kPageSize
     $scope.paginatedTicks = $scope.ticks.slice start, end
-
-  $scope.isEditingCoordinatorLabel = -> $scope.editingCoordinatorLabel
 
 # Filters are to be used in HTML markup only
 ui.filter 'human_date', -> (value) -> 
