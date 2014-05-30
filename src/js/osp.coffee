@@ -1,6 +1,6 @@
 osp = angular.module 'osp', ->
 
-host = 'http://zeitl.com'
+host = 'http://ardusensor.com'
 #host = 'http://localhost:8084'
 
 kPageSize = 50
