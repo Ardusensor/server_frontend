@@ -150,3 +150,4 @@ osp.controller "MainController", ($scope, $http, $location, $filter) ->
 # Filters are to be used in HTML markup only
 osp.filter 'human_date', -> (value) -> moment(value).format("DD.MM.YYYY HH:mm")
 osp.filter 'moment_date', -> (value) -> value.format("DD.MM.YYYY")
+osp.filter 'last_four', -> (value) -> value.substr(value.length - 4, 4)
