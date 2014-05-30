@@ -178,7 +178,11 @@ ui.controller "MainController", ($scope, $http, $location, $filter) ->
   $scope.isEditingCoordinatorLabel = -> $scope.editingCoordinatorLabel
 
 # Filters are to be used in HTML markup only
-ui.filter 'human_date', -> (value) -> moment(value).format("DD.MM.YYYY HH:mm")
+ui.filter 'human_date', -> (value) -> 
+  time = moment(value)
+  if moment().diff(time) < 950400000
+    return time.fromNow(true)
+  time.format("DD.MM.YYYY HH:mm")
 ui.filter 'moment_date', -> (value) -> value.format("DD.MM.YYYY")
 ui.filter 'last_four', -> (value) -> value.substr(value.length - 4, 4)
 ui.filter 'valid_uri', -> (sensor, scope) -> scope.buildURI(sensor)
