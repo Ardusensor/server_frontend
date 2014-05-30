@@ -13,6 +13,18 @@
       ],
       "restart_command": "true",
       "deploydir": "/home/ardusensor/frontend"
+    },
+    {
+      "name": "production",
+      "servers": [
+        {
+          "port": "666",
+          "user": "ardusensor",
+          "ip": "ardusensor.com"
+        }
+      ],
+      "restart_command": "true",
+      "deploydir": "/home/ardusensor/frontend"
     }
   ],
   "built_app_dir": "dist",
