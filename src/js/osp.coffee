@@ -1,7 +1,6 @@
 osp = angular.module 'osp', ->
 
 host = 'http://ardusensor.com'
-#host = 'http://localhost:8084'
 
 kPageSize = 400
 
@@ -15,6 +14,10 @@ osp.controller "MainController", ($scope, $http, $location, $filter) ->
 
   $scope.setVariablesFromHashbang($location.path().split("/"))
   
+  if $location.absUrl().indexOf("file://") != -1
+    console.log 'Using local API host'
+    host = 'http://localhost:8084'
+
   if $scope.base != ""
     $http.get(host + '/api/coordinators' + $scope.base).success((data) ->
       $scope.selectCoordinator(if data then data else null)
@@ -154,8 +157,12 @@ osp.controller "MainController", ($scope, $http, $location, $filter) ->
     $scope.loadSensorData()
 
   $scope.saveCoordinatorLabel = (coordinator) ->
-    $http.put(host + '/api/coordinators/' + $scope.selectedCoordinator.id, $scope.selectedCoordinator)
-    $scope.editingCoordinatorLabel = false
+    $http.put(host + '/api/coordinators/' + coordinator.id, coordinator)
+    coordinator.edi = false
+
+  $scope.saveSensorLabel = (sensor) ->
+    $http.put(host + '/api/sensors/' + sensor.id, sensor)
+    sensor.editingLabel = false
 
   $scope.setPage = (page) ->
     page = 1 if page < 1
@@ -165,7 +172,6 @@ osp.controller "MainController", ($scope, $http, $location, $filter) ->
     end = start+kPageSize
     $scope.paginatedTicks = $scope.ticks.slice start, end
 
-  $scope.editCoordinatorLabel = -> $scope.editingCoordinatorLabel = true
   $scope.isEditingCoordinatorLabel = -> $scope.editingCoordinatorLabel
 
 # Filters are to be used in HTML markup only

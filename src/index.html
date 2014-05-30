@@ -50,13 +50,13 @@
                   <span
                     ng-class="{'label-info': selectedCoordinator.label, 'label-default': !selectedCoordinator.label, 'label': true}"
                     ng-bind="selectedCoordinator.label || 'Add label'"
-                    ng-hide="isEditingCoordinatorLabel()"
-                    ng-click="editCoordinatorLabel()"></span>
+                    ng-hide="selectedCoordinator.editingLabel"
+                    ng-click="selectedCoordinator.editingLabel = true"></span>
                   <input type="text" class="form-control" placeholder="Coordinator label"
                     autofocus="autofocus"
                     ng-model="selectedCoordinator.label"
-                    ng-show="isEditingCoordinatorLabel()"
-                    ng-blur="saveCoordinatorLabel(coordinator)">
+                    ng-show="selectedCoordinator.editingLabel"
+                    ng-blur="saveCoordinatorLabel(selectedCoordinator)">
                 </div>
               </div>
               
@@ -72,12 +72,25 @@
                   <thead>
                     <tr>
                       <th>Sensor</th>
+                      <th>Label</th>
                       <th>Last reading</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr ng-repeat="sensor in sensors | orderBy:predicate:!reverse" ng-class="{success: selectedSensor==sensor}" ng-click="selectSensor(sensor)">
                       <td><a ng-href="index.html#{{sensor | valid_uri:this}}" ng-bind="sensor.id | last_four"></a></td>
+                      <td>
+                        <span
+                          ng-class="{label: true, 'label-info': sensor.label, 'label-default': !sensor.label}"
+                          ng-click="sensor.editingLabel = true"
+                          ng-hide="sensor.editingLabel"
+                          ng-bind="sensor.label || 'Add label'"></span>
+                        <input type="text" class="form-control" placeholder="Sensor label"
+                          autofocus="autofocus"
+                          ng-model="sensor.label"
+                          ng-show="sensor.editingLabel"
+                          ng-blur="saveSensorLabel(sensor)">
+                        </td>
                       <td ng-bind="sensor.last_tick | human_date"></td>
                     </tr>
                   </tbody>
