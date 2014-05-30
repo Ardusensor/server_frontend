@@ -3,7 +3,7 @@ osp = angular.module 'osp', ->
 host = 'http://ardusensor.com'
 #host = 'http://localhost:8084'
 
-kPageSize = 50
+kPageSize = 400
 
 osp.controller "MainController", ($scope, $http, $location, $filter) ->
   $scope.setVariablesFromHashbang = (hashbang) ->
