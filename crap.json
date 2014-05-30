@@ -29,7 +29,7 @@
   ],
   "built_app_dir": "dist",
   "app_build_commands": [
-    "mkdir -p dist"
+    "mkdir -p dist; touch dist/keep"
   ],
   "asset_build_commands": [
     "make assets"
