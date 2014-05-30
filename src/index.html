@@ -47,8 +47,9 @@
                 <div class="input-group coordinator-name">
                   <span class="input-group-addon">Coordinator:</span>
                   <span ng-bind="selectedCoordinator.id"></span>
-                  <span class="label label-info"
-                    ng-bind="selectedCoordinator.label"
+                  <span
+                    ng-class="{'label-info': selectedCoordinator.label, 'label-default': !selectedCoordinator.label, 'label': true}"
+                    ng-bind="selectedCoordinator.label || 'Add label'"
                     ng-hide="isEditingCoordinatorLabel()"
                     ng-click="editCoordinatorLabel()"></span>
                   <input type="text" class="form-control" placeholder="Coordinator label"
