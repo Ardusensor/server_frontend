@@ -36,15 +36,11 @@ ui.controller "MainController", ($scope, $http, $location, $filter) ->
   $scope.editingCoordinatorLabel = false
 
   $scope.getUnitForRage = ->
-    if $scope.range is 'Biweek'
-      return 'Week'
     if $scope.range is 'Quarter'
       return 'Month'
     return $scope.range
 
   $scope.correctAmount = (amount) ->
-    if $scope.range is 'Biweek'
-      return amount * 2
     if $scope.range is 'Quarter'
       return amount * 3
     return amount
@@ -157,7 +153,7 @@ ui.controller "MainController", ($scope, $http, $location, $filter) ->
       when 'Year' then $scope.dotsPerDay = 1
       when 'Quarter' then $scope.dotsPerDay = 4
       when 'Month' then $scope.dotsPerDay = 12
-      when 'Biweek' then $scope.dotsPerDay = 24
+      when 'Day' then $scope.dotsPerDay = 24
       when 'Week' then $scope.dotsPerDay = 24
       else $scope.dotsPerDay = null
     $scope.setURI()
