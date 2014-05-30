@@ -46,8 +46,16 @@
               <div class="col-md-4 pull-left">
                 <div class="input-group coordinator-name">
                   <span class="input-group-addon">Coordinator:</span>
-                  <input type="text" class="form-control" placeholder="Coordinator name" ng-model="selectedCoordinator.name"
-                    ng-blur="saveCoordinatorName(coordinator)">
+                  <span ng-bind="selectedCoordinator.id"></span>
+                  <span class="label label-info"
+                    ng-bind="selectedCoordinator.label"
+                    ng-hide="isEditingCoordinatorLabel()"
+                    ng-click="editCoordinatorLabel()"></span>
+                  <input type="text" class="form-control" placeholder="Coordinator label"
+                    autofocus="autofocus"
+                    ng-model="selectedCoordinator.label"
+                    ng-show="isEditingCoordinatorLabel()"
+                    ng-blur="saveCoordinatorLabel(coordinator)">
                 </div>
               </div>
               

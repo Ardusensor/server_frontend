@@ -28,6 +28,8 @@ osp.controller "MainController", ($scope, $http, $location, $filter) ->
   $scope.dotsPerDay = 12
   $scope.errorMsg = null
 
+  $scope.editingCoordinatorLabel = false
+
   $scope.getUnitForRage = ->
     if $scope.range is 'Biweek'
       return 'Week'
@@ -136,8 +138,9 @@ osp.controller "MainController", ($scope, $http, $location, $filter) ->
       else $scope.dotsPerDay = null
     $scope.loadSensorData()
 
-  $scope.saveCoordinatorName = (coordinator) ->
+  $scope.saveCoordinatorLabel = (coordinator) ->
     $http.put(host + '/api/coordinators/' + $scope.selectedCoordinator.id, $scope.selectedCoordinator)
+    $scope.editingCoordinatorLabel = false
 
   $scope.setPage = (page) ->
     page = 1 if page < 1
@@ -146,6 +149,9 @@ osp.controller "MainController", ($scope, $http, $location, $filter) ->
     start = kPageSize*($scope.page-1)
     end = start+kPageSize
     $scope.paginatedTicks = $scope.ticks.slice start, end
+
+  $scope.editCoordinatorLabel = -> $scope.editingCoordinatorLabel = true
+  $scope.isEditingCoordinatorLabel = -> $scope.editingCoordinatorLabel
 
 # Filters are to be used in HTML markup only
 osp.filter 'human_date', -> (value) -> moment(value).format("DD.MM.YYYY HH:mm")
