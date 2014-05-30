@@ -5,7 +5,7 @@ uiCharts.hueChart = null
 uiCharts.batChart = null
 uiCharts.sigChart = null
 
-uiCharts.putData = (labels, data, container, chart, min, max) ->
+uiCharts.putData = (labels, data, container, chart, min, max, name) ->
 	return if data.length == 0
 
 	chart = null
@@ -22,8 +22,21 @@ uiCharts.putData = (labels, data, container, chart, min, max) ->
 		max: max,
 		series: [
 			data: data,
-			color: "#c05020"
+			color: "#c05020",
+			name: name
 		]
+	)
+
+	xFormat = (x) ->
+		""
+
+	yFormat = (y) ->
+		Math.round(y * 100) / 100
+
+	hoverDetail = new Rickshaw.Graph.HoverDetail(
+		graph: chart,
+		xFormatter: xFormat,
+		yFormatter: yFormat
 	)
 
 	format = (n) ->
@@ -70,10 +83,10 @@ uiCharts.drawChart = (data, done) ->
 		signal.push({x: (idx + 1), y: (if model.radio_quality? then parseInt(model.radio_quality) else null)})
 	)
 
-	uiCharts.putData(labels, temp, '#temp', uiCharts.tempChart, -20, 40)
-	uiCharts.putData(labels, hue, '#hue', uiCharts.hueChart, 500, 1400)
-	uiCharts.putData(labels, battery, '#battery', uiCharts.batChart, 2.5, 3.5)
-	uiCharts.putData(labels, signal, '#signal', uiCharts.sigChart, "auto")
+	uiCharts.putData(labels, temp, '#temp', uiCharts.tempChart, -20, 40, "Temperature")
+	uiCharts.putData(labels, hue, '#hue', uiCharts.hueChart, 500, 1400, "Huemitity")
+	uiCharts.putData(labels, battery, '#battery', uiCharts.batChart, 2.5, 3.5, "Battery")
+	uiCharts.putData(labels, signal, '#signal', uiCharts.sigChart, "auto", "auto", "Signal strength")
 
 	if done?
 		done()
