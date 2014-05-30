@@ -84,7 +84,7 @@ uiCharts.drawChart = (data, done) ->
 	)
 
 	uiCharts.putData(labels, temp, '#temp', uiCharts.tempChart, -20, 40, "Temperature")
-	uiCharts.putData(labels, hue, '#hue', uiCharts.hueChart, 500, 1400, "Huemitity")
+	uiCharts.putData(labels, hue, '#hue', uiCharts.hueChart, 500, 1400, "Humidity")
 	uiCharts.putData(labels, battery, '#battery', uiCharts.batChart, 2.5, 3.5, "Battery")
 	uiCharts.putData(labels, signal, '#signal', uiCharts.sigChart, "auto", "auto", "Signal strength")
 
