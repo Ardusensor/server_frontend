@@ -77,7 +77,7 @@
                   </thead>
                   <tbody>
                     <tr ng-repeat="sensor in sensors | orderBy:predicate:!reverse" ng-class="{success: selectedSensor==sensor}" ng-click="selectSensor(sensor)">
-                      <td><a ng-href="index.html#{{ base }}/{{ sensor.id }}" ng-bind="sensor.id | last_four"></a></td>
+                      <td><a ng-href="index.html#{{sensor | valid_uri:this}}" ng-bind="sensor.id | last_four"></a></td>
                       <td ng-bind="sensor.last_tick | human_date"></td>
                     </tr>
                   </tbody>

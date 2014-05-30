@@ -10,6 +10,7 @@ osp.controller "MainController", ($scope, $http, $location, $filter) ->
   $scope.base = "/" + loc_base[1] + "/" + loc_base[2]
 
   $scope.sensor_url = (if loc_base.length > 3 then loc_base[3] else null)
+  $scope.range = (if loc_base.length > 4 then loc_base[4] else null)
 
   if $scope.base != ""
     $http.get(host + '/api/coordinators' + $scope.base).success((data) ->
@@ -18,7 +19,7 @@ osp.controller "MainController", ($scope, $http, $location, $filter) ->
       $scope.errorMsg = data or status or "Couldn't find coordinator, please check your URL."
     )
 
-  $scope.range = 'Month'
+  $scope.range ||= 'Month'
   $scope.chartView = true
   $scope.ticks = []
   $scope.page = 1
@@ -118,8 +119,11 @@ osp.controller "MainController", ($scope, $http, $location, $filter) ->
         )
     , 0)
 
+  $scope.buildURI = (sensor) ->
+    $scope.base + "/" + sensor.id + "/" + $scope.range
+
   $scope.setURI = (sensor) ->
-    document.location.hash = $scope.base + "/" + sensor.id
+    document.location.hash = $scope.buildURI(sensor)
 
   $scope.selectSensor = (sensor) ->
     $scope.setURI(sensor)
@@ -161,3 +165,4 @@ osp.controller "MainController", ($scope, $http, $location, $filter) ->
 osp.filter 'human_date', -> (value) -> moment(value).format("DD.MM.YYYY HH:mm")
 osp.filter 'moment_date', -> (value) -> value.format("DD.MM.YYYY")
 osp.filter 'last_four', -> (value) -> value.substr(value.length - 4, 4)
+osp.filter 'valid_uri', -> (sensor, scope) -> scope.buildURI(sensor)
