@@ -2,9 +2,12 @@
 <html lang="en" ng-app="ui">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
+    <link rel="shortcut icon" type="image/icon" href="/favicon.ico">
+    <link rel="icon" type="image/icon" href="/favicon.ico">
 
     <title>Ardusensor</title>
 
@@ -12,11 +15,15 @@
     <link href="css/graph.css" rel="stylesheet">
     <link href="css/lines.css" rel="stylesheet">
     <link href="css/ui.css" rel="stylesheet">
-    <link rel="shortcut icon" type="image/icon" href="/favicon.ico">
-    <link rel="icon" type="image/icon" href="/favicon.ico">
-
+    
     <script src="js/lib/angular.js"></script>
     <script src="js/lib/angular-route.js"></script>
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
   </head>
 
   <body ng-controller="MainController" ng-cloak>
@@ -38,15 +45,15 @@
       </div>
     </div>
 
-    <div class="container">
+    <div class="container-fluid">
       <div class="starter-template">
         <div class="alert alert-danger alert-dismissable" ng-show='errorMsg'>
           <button type="button" class="close" data-dismiss="alert" aria-hidden="true" ng-click="errorMsg=null">&times;</button>
           <span ng-bind='errorMsg'></span>
         </div>
-        <div class="row top-15">
-          <div class="col-md-11" ng-show="selectedCoordinator">
-            <div class="row">
+        <div class="row">
+          <div class="col-md-12" ng-show="selectedCoordinator">
+          <!--  <div class="row">
               <div class="col-md-4 pull-left">
                 <div class="input-group coordinator-name">
                   <span class="input-group-addon">Coordinator:</span>
@@ -79,8 +86,8 @@
                 <li><a href="javascript:void(0)" ng-href="{{ selectedCoordinator.log_url }}" target="_blank">Display log</a></li>
               </ul>
             </div>
-            <div class="clearfix"></div>
-            <div class="row top-15">
+            <div class="clearfix"></div>-->
+            <div class="row">
               <div class="col-md-4">
                 <table class="table table-striped" id="sensors-list">
                   <thead>
