@@ -14,9 +14,9 @@ ui.controller "MainController", ($scope, $http, $location, $filter) ->
 
   $scope.setVariablesFromHashbang($location.path().split("/"))
   
-  if $location.absUrl().indexOf("file://") != -1
-    console.log 'Using local API host'
-    host = 'http://localhost:8084'
+  #if $location.absUrl().indexOf("file://") != -1
+  #  console.log 'Using local API host'
+  #  host = 'http://localhost:8084'
 
   if $scope.base != ""
     $http.get(host + '/api/coordinators' + $scope.base).success((data) ->
@@ -199,3 +199,4 @@ ui.filter 'human_date', -> (value) ->
 ui.filter 'moment_date', -> (value) -> value.format("DD.MM.YYYY")
 ui.filter 'last_four', -> (value) -> value.substr(value.length - 4, 4)
 ui.filter 'valid_uri', -> (sensor, scope) -> scope.buildURI(sensor)
+ui.filter 'float2', -> (value) -> Math.round((if value then (parseFloat(value) / 100) else 0) * 100) / 100

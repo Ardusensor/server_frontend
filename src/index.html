@@ -27,23 +27,43 @@
   </head>
 
   <body ng-controller="MainController" ng-cloak>
-    <div class="navbar navbar-inverse navbar-fixed-top">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="navbar-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="javascript:void(0)" id="ardulogo">
-            <img src="img/header.svg" height="29" width="122">
-          </a>
-        </div>
-        <div class="collapse navbar-collapse">
-          &nbsp;
-        </div><!--/.nav-collapse -->
-      </div>
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="javascript:void(0)">
+        <img src="img/header.svg" height="29" width="122">
+      </a>
     </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <p class="navbar-text">Coordinator: <span ng-bind="selectedCoordinator.id"></span></p>
+      <form class="navbar-form navbar-left">
+        <div class="form-group coordinator-name">
+          <span
+            ng-class="{'label-info': selectedCoordinator.label, 'label-default': !selectedCoordinator.label, 'label': true}"
+            ng-bind="selectedCoordinator.label || 'Add label'"
+            ng-hide="selectedCoordinator.editingLabel"
+            ng-click="selectedCoordinator.editingLabel = true"></span>
+          <input type="text" class="form-control" placeholder="Coordinator label"
+            autofocus="autofocus"
+            ng-model="selectedCoordinator.label"
+            ng-show="selectedCoordinator.editingLabel"
+            ng-blur="saveCoordinatorLabel(selectedCoordinator)">
+        </div>
+      </form>
+      <p class="navbar-text">GSM: <span ng-bind="latestCoordinatorReading.gsm_coverage"></span></p>
+      <p class="navbar-text">Voltage: <span ng-bind="latestCoordinatorReading.battery_voltage | float2"></span></p>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
 
     <div class="container-fluid">
       <div class="starter-template">
@@ -53,32 +73,7 @@
         </div>
         <div class="row">
           <div class="col-md-12" ng-show="selectedCoordinator">
-          <!--  <div class="row">
-              <div class="col-md-4 pull-left">
-                <div class="input-group coordinator-name">
-                  <span class="input-group-addon">Coordinator:</span>
-                  <span ng-bind="selectedCoordinator.id"></span>
-                  <span
-                    ng-class="{'label-info': selectedCoordinator.label, 'label-default': !selectedCoordinator.label, 'label': true}"
-                    ng-bind="selectedCoordinator.label || 'Add label'"
-                    ng-hide="selectedCoordinator.editingLabel"
-                    ng-click="selectedCoordinator.editingLabel = true"></span>
-                  <input type="text" class="form-control" placeholder="Coordinator label"
-                    autofocus="autofocus"
-                    ng-model="selectedCoordinator.label"
-                    ng-show="selectedCoordinator.editingLabel"
-                    ng-blur="saveCoordinatorLabel(selectedCoordinator)">
-                </div>
-              </div>
-              <div class="col-md-4 pull-left">
-                <div class="input-group">
-                  <span class="input-group-addon">GSM:</span>
-                  <span ng-bind="latestCoordinatorReading.gsm_coverage" class="form-control"></span>
-
-                  <span class="input-group-addon">Volt:</span>
-                  <span ng-bind="latestCoordinatorReading.battery_voltage" class="form-control"></span>
-                </div>
-              </div>
+          <!--  
               
               <ul class="nav nav-tabs pull-right">
                 <li ng-class="{active: chartView}"><a href="javascript:void(0)" ng-click="toggleChartView(true)">Chart</a></li>
