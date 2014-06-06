@@ -91,7 +91,7 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr ng-repeat="sensor in sensors | orderBy:predicate:!reverse" ng-class="{success: selectedSensor==sensor}" ng-click="selectSensor(sensor)">
+                    <tr ng-repeat="sensor in sensors" ng-class="{success: selectedSensor==sensor}" ng-click="selectSensor(sensor)">
                       <td><a ng-href="index.html#{{sensor | valid_uri:this}}" ng-bind="sensor.id | last_four"></a></td>
                       <td>
                         <span

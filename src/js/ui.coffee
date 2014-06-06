@@ -60,7 +60,8 @@ ui.controller "MainController", ($scope, $http, $location, $filter) ->
     $scope.selectedCoordinator = coordinator
     $scope.getLatestCoordinatorReading(coordinator)
     $http.get(host + '/api/coordinators/' + $scope.selectedCoordinator.id + '/sensors').success (data) ->
-      $scope.sensors = data
+      # avoid angular automatic reorder/rerender so we can update currentSensor properties
+      $scope.sensors = _.sortBy(data, (x) -> -1 * (moment(x.last_tick).utc()))
       $scope.predicate = 'last_tick'
       if $scope.sensor_url
         sensor = $scope.findbyID $scope.sensors, $scope.sensor_url
@@ -82,6 +83,7 @@ ui.controller "MainController", ($scope, $http, $location, $filter) ->
       '/ticks?start=' + $scope.chartStart.unix() +
       '&end=' + $scope.chartEnd.unix()).success((data) ->
         $scope.renderTicks data
+        $scope.setCurrentSensorLatestReading data
     ).error((data, status, headers, config) ->
       $scope.errorMsg = data or status or "Couldn't load list data from backend."
     )
@@ -94,6 +96,11 @@ ui.controller "MainController", ($scope, $http, $location, $filter) ->
     $scope.pages = Math.floor $scope.ticks.length / kPageSize
     $scope.pages += 1 if $scope.ticks.length % kPageSize
     $scope.page = 1
+
+  $scope.setCurrentSensorLatestReading = (data) ->
+    if not $scope.selectedSensor or not data
+      return
+    $scope.selectedSensor.last_tick = _.max(_.map(data, (x) -> moment(x.datetime)))
 
   $scope.loadSensorData = ->
     if $scope.chartView
@@ -110,6 +117,7 @@ ui.controller "MainController", ($scope, $http, $location, $filter) ->
       '&end=' + $scope.chartEnd.unix() +
       '&dots_per_day=' + $scope.dotsPerDay).success((data) ->
         $scope.renderDots data
+        $scope.setCurrentSensorLatestReading data
     ).error((data, status, headers, config) ->
       $scope.errorMsg = data or status or "Couldn't load chart data from backend."
     )
