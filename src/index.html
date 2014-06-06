@@ -28,42 +28,44 @@
 
   <body ng-controller="MainController" ng-cloak>
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-    <div class="container-fluid">
-    <!-- Brand and toggle get grouped for better mobile display -->
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="javascript:void(0)">
-        <img src="img/header.svg" height="29" width="122">
-      </a>
-    </div>
-
-    <!-- Collect the nav links, forms, and other content for toggling -->
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      <p class="navbar-text">Coordinator: <span ng-bind="selectedCoordinator.id"></span></p>
-      <form class="navbar-form navbar-left">
-        <div class="form-group coordinator-name">
-          <span
-            ng-class="{'label-info': selectedCoordinator.label, 'label-default': !selectedCoordinator.label, 'label': true}"
-            ng-bind="selectedCoordinator.label || 'Add label'"
-            ng-hide="selectedCoordinator.editingLabel"
-            ng-click="selectedCoordinator.editingLabel = true"></span>
-          <input type="text" class="form-control" placeholder="Coordinator label"
-            autofocus="autofocus"
-            ng-model="selectedCoordinator.label"
-            ng-show="selectedCoordinator.editingLabel"
-            ng-blur="saveCoordinatorLabel(selectedCoordinator)">
+      <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="javascript:void(0)">
+            <img src="img/header.svg" height="29" width="122">
+          </a>
         </div>
-      </form>
-      <p class="navbar-text">GSM: <span ng-bind="latestCoordinatorReading.gsm_coverage"></span></p>
-      <p class="navbar-text">Voltage: <span ng-bind="latestCoordinatorReading.battery_voltage | float2"></span></p>
-    </div><!-- /.navbar-collapse -->
-  </div><!-- /.container-fluid -->
-</nav>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <p class="navbar-text">
+            Coordinator: <span ng-bind="selectedCoordinator.id"></span>
+            (GSM: <span ng-bind="latestCoordinatorReading.gsm_coverage"></span>
+            Voltage: <span ng-bind="latestCoordinatorReading.battery_voltage | float2"></span>)
+          </p>
+          <form class="navbar-form navbar-left">
+            <div class="form-group coordinator-name">
+              <span
+                ng-class="{'label-info': selectedCoordinator.label, 'label-default': !selectedCoordinator.label, 'label': true}"
+                ng-bind="selectedCoordinator.label || 'Add label'"
+                ng-hide="selectedCoordinator.editingLabel"
+                ng-click="selectedCoordinator.editingLabel = true"></span>
+              <input type="text" class="form-control" placeholder="Coordinator label"
+                autofocus="autofocus"
+                ng-model="selectedCoordinator.label"
+                ng-show="selectedCoordinator.editingLabel"
+                ng-blur="saveCoordinatorLabel(selectedCoordinator)">
+            </div>
+          </form>
+        </div><!-- /.navbar-collapse -->
+      </div><!-- /.container-fluid -->
+    </nav>
 
     <div class="container-fluid">
       <div class="starter-template">
@@ -76,17 +78,59 @@
             <div class="row">
               <div class="col-md-4">
                 <ul class="list-group" id="sensors-list">
-                  <li
+                  <a
                     class="list-group-item"
-                    ng-repeat="sensor in sensors" ng-class="{success: selectedSensor==sensor}" ng-click="selectSensor(sensor)">
-                    <a ng-href="index.html#{{sensor | valid_uri:this}}" ng-bind="sensor.id | last_four"></a>
-                    <span ng-bind="sensor.last_tick | human_date"></span>
-                    <span class="label label-info" ng-bind="sensor.label"></span>
-                    <span class="glyphicon glyphicon-warning-sign" ng-show="!sensor.calibration_constant"></span>                    
-                  </li>
+                    ng-repeat="sensor in sensors"
+                    ng-click="selectSensor(sensor)"
+                    ng-href="index.html#{{sensor | valid_uri:this}}" 
+                    ng-class="{active: selectedSensor==sensor}">
+                      <span ng-bind="sensor.id | last_four"></span>
+                      <span ng-bind="sensor.last_tick | human_date"></span>
+                      <span class="label label-info" ng-bind="sensor.label"></span>
+                      <span class="glyphicon glyphicon-warning-sign" ng-show="!sensor.calibration_constant"></span>
+                  </a>
                 </ul>
               </div>
               <div class="col-md-8">
+                <div class="col-md-5">
+                  <button 
+                    type="button"
+                    class="btn btn-primary btn-xs"
+                    ng-click="selectedSensor.editingLabel = true"
+                    ng-hide="selectedSensor.editingLabel || selectedSensor.calibrating">Add label
+                  </button>
+                  <div class="input-group" ng-show="selectedSensor.editingLabel">
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="Sensor label"
+                      autofocus="autofocus"
+                      ng-model="selectedSensor.label"
+                      ng-blur="saveSensor(selectedSensor)"  
+                    >
+                    <span class="input-group-btn">
+                      <button
+                        class="btn btn-default" 
+                        type="button"
+                        ng-click="saveSensor(selectedSensor)">OK</button>
+                    </span>
+                  </div>
+                  <button 
+                    type="button"
+                    class="btn btn-primary btn-xs"
+                    ng-click="selectedSensor.calibrating = true"
+                    ng-hide="selectedSensor.editingLabel || selectedSensor.calibrating">Calibrate
+                  </button>
+                  <div class="input-group" ng-show="selectedSensor.calibrating">
+                    <input type="number" step="0.1" class="form-control" placeholder="0"
+                        autofocus="autofocus"
+                        ng-model="selectedSensor.calibration_constant"
+                        ng-blur="saveSensor(selectedSensor)">
+                    <span class="input-group-btn">
+                      <button class="btn btn-default" type="button" ng-click="saveSensor(selectedSensor)">OK</button>
+                    </span>
+                  </div>
+                </div>
                 <div class="col-md-5 pull-right">
                   <ul class="nav nav-pills" id="chart-nav">
                     <li ng-class="{active: chartView}"><a href="javascript:void(0)" ng-click="toggleChartView(true)">Chart</a></li>
@@ -173,44 +217,6 @@
                     </span>
                     <span class="btn glyphicon glyphicon-arrow-right" ng-click="slideRange(1)"></span>
                     <span class="btn glyphicon today" ng-click="setToday()">Today</span>
-                  </div>
-                  <div>
-                    <button 
-                      type="button"
-                      class="btn btn-primary btn-xs"
-                      ng-click="selectedSensor.editingLabel = true"
-                      ng-hide="selectedSensor.editingLabel">Add label
-                    </button>
-                    <div class="input-group" ng-show="selectedSensor.editingLabel">
-                      <input
-                        type="text"
-                        class="form-control"
-                        placeholder="Sensor label"
-                        autofocus="autofocus"
-                        ng-model="selectedSensor.label"
-                      >
-                      <span class="input-group-btn">
-                        <button
-                          class="btn btn-default" 
-                          type="button"
-                          ng-click="saveSensor(selectedSensor)">OK</button>
-                      </span>
-                    </div>
-                    <button 
-                      type="button"
-                      class="btn btn-primary btn-xs"
-                      ng-click="selectedSensor.calibrating = true"
-                      ng-hide="selectedSensor.calibrating">Calibrate
-                    </button>
-                    <div class="input-group" ng-show="selectedSensor.calibrating">
-                      <input type="number" step="0.1" class="form-control" placeholder="0"
-                          autofocus="autofocus"
-                          ng-model="selectedSensor.calibration_constant"
-                          ng-blur="saveSensor(selectedSensor)">
-                      <span class="input-group-btn">
-                        <button class="btn btn-default" type="button" ng-click="saveSensor(selectedSensor)">OK</button>
-                      </span>
-                    </div>
                   </div>
                   <h4>Temperature</h4><span class="label label-warning"
                     ng-show="!selectedSensor.calibration_constant">Not calibrated</span>
