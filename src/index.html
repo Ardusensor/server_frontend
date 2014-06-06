@@ -73,11 +73,6 @@
         </div>
         <div class="row top-15">
           <div class="col-md-12" ng-show="selectedCoordinator">
-          <!--  
-              
-              
-            </div>
-            <div class="clearfix"></div>-->
             <div class="row">
               <div class="col-md-4">
                 <ul class="list-group" id="sensors-list">
@@ -87,48 +82,9 @@
                     <a ng-href="index.html#{{sensor | valid_uri:this}}" ng-bind="sensor.id | last_four"></a>
                     <span ng-bind="sensor.last_tick | human_date"></span>
                     <span class="label label-info" ng-bind="sensor.label"></span>
-                    <span class="glyphicon glyphicon-warning-sign"></span>                    
+                    <span class="glyphicon glyphicon-warning-sign" ng-show="!sensor.calibration_constant"></span>                    
                   </li>
                 </ul>
-                <!--
-                <table class="table table-striped" id="sensors-list">
-                  <thead>
-                    <tr>
-                      <th>Sensor</th>
-                      <th>Label</th>
-                      <th colspan="2">Last reading</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr ng-repeat="sensor in sensors" ng-class="{success: selectedSensor==sensor}" ng-click="selectSensor(sensor)">
-                      <td><a ng-href="index.html#{{sensor | valid_uri:this}}" ng-bind="sensor.id | last_four"></a></td>
-                      <td>
-                        <span
-                          ng-class="{label: true, 'label-info': sensor.label, 'label-default': !sensor.label}"
-                          ng-click="sensor.editingLabel = true"
-                          ng-hide="sensor.editingLabel"
-                          ng-bind="sensor.label || 'Add label'"></span>
-                        <input type="text" class="form-control" placeholder="Sensor label"
-                          autofocus="autofocus"
-                          ng-model="sensor.label"
-                          ng-show="sensor.editingLabel"
-                          ng-blur="saveSensor(sensor)">
-                        </td>
-                      <td ng-bind="sensor.last_tick | human_date"></td>
-                      <td>
-                        <input type="button" class="btn btn-default btn-xs"
-                          ng-hide="sensor.calibrating"
-                          ng-click="sensor.calibrating=true"
-                          value="Calibrate">
-                        <input type="number" step="0.1" class="form-control" placeholder="0"
-                          autofocus="autofocus"
-                          ng-model="sensor.current_temperature"
-                          ng-show="sensor.calibrating"
-                          ng-blur="saveSensor(sensor)">
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>-->
               </div>
               <div class="col-md-8">
                 <div class="col-md-5 pull-right">
@@ -217,7 +173,45 @@
                     </span>
                     <span class="btn glyphicon glyphicon-arrow-right" ng-click="slideRange(1)"></span>
                     <span class="btn glyphicon today" ng-click="setToday()">Today</span>
-                  </div>  
+                  </div>
+                  <div>
+                    <button 
+                      type="button"
+                      class="btn btn-primary btn-xs"
+                      ng-click="selectedSensor.editingLabel = true"
+                      ng-hide="selectedSensor.editingLabel">Add label
+                    </button>
+                    <div class="input-group" ng-show="selectedSensor.editingLabel">
+                      <input
+                        type="text"
+                        class="form-control"
+                        placeholder="Sensor label"
+                        autofocus="autofocus"
+                        ng-model="selectedSensor.label"
+                      >
+                      <span class="input-group-btn">
+                        <button
+                          class="btn btn-default" 
+                          type="button"
+                          ng-click="saveSensor(selectedSensor)">OK</button>
+                      </span>
+                    </div>
+                    <button 
+                      type="button"
+                      class="btn btn-primary btn-xs"
+                      ng-click="selectedSensor.calibrating = true"
+                      ng-hide="selectedSensor.calibrating">Calibrate
+                    </button>
+                    <div class="input-group" ng-show="selectedSensor.calibrating">
+                      <input type="number" step="0.1" class="form-control" placeholder="0"
+                          autofocus="autofocus"
+                          ng-model="selectedSensor.calibration_constant"
+                          ng-blur="saveSensor(selectedSensor)">
+                      <span class="input-group-btn">
+                        <button class="btn btn-default" type="button" ng-click="saveSensor(selectedSensor)">OK</button>
+                      </span>
+                    </div>
+                  </div>
                   <h4>Temperature</h4><span class="label label-warning"
                     ng-show="!selectedSensor.calibration_constant">Not calibrated</span>
                   <div id="temp" class="chart_container">
