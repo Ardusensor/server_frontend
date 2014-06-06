@@ -55,6 +55,9 @@ table {
 .coordinator-name span.input-group-addon {
 	border: 1px solid #ccc;
 }
+.today {
+	padding-left: 0;
+}
 .selected-range, .selected-range span {
 	vertical-align: bottom;
 }

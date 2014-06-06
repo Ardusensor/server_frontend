@@ -167,6 +167,10 @@ ui.controller "MainController", ($scope, $http, $location, $filter) ->
     $scope.setURI()
     $scope.loadSensorData()
 
+  $scope.setToday = () ->
+    $scope.chartEnd = moment()
+    $scope.selectRange($scope.range)
+
   $scope.saveCoordinatorLabel = (coordinator) ->
     $http.put(host + '/api/coordinators/' + coordinator.id, coordinator)
     coordinator.editingLabel = false
