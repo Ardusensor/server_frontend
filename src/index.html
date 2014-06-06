@@ -71,7 +71,7 @@
           <button type="button" class="close" data-dismiss="alert" aria-hidden="true" ng-click="errorMsg=null">&times;</button>
           <span ng-bind='errorMsg'></span>
         </div>
-        <div class="row">
+        <div class="row top-15">
           <div class="col-md-12" ng-show="selectedCoordinator">
           <!--  
               
@@ -84,6 +84,17 @@
             <div class="clearfix"></div>-->
             <div class="row">
               <div class="col-md-4">
+                <ul class="list-group" id="sensors-list">
+                  <li
+                    class="list-group-item"
+                    ng-repeat="sensor in sensors" ng-class="{success: selectedSensor==sensor}" ng-click="selectSensor(sensor)">
+                    <a ng-href="index.html#{{sensor | valid_uri:this}}" ng-bind="sensor.id | last_four"></a>
+                    <span ng-bind="sensor.last_tick | human_date"></span>
+                    <span class="label label-info" ng-bind="sensor.label"></span>
+                    <span class="glyphicon glyphicon-warning-sign"></span>                    
+                  </li>
+                </ul>
+                <!--
                 <table class="table table-striped" id="sensors-list">
                   <thead>
                     <tr>
@@ -121,7 +132,7 @@
                       </td>
                     </tr>
                   </tbody>
-                </table>
+                </table>-->
               </div>
               <div class="col-md-8">
                 <div ng-show="!chartView">
