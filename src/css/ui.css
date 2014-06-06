@@ -76,3 +76,6 @@ table {
 #unplaced-sensors span {
 	margin: 5px;
 }
+#chart-nav li {
+	min-width: 0;
+}

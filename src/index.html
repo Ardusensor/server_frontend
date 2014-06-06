@@ -75,11 +75,7 @@
           <div class="col-md-12" ng-show="selectedCoordinator">
           <!--  
               
-              <ul class="nav nav-tabs pull-right">
-                <li ng-class="{active: chartView}"><a href="javascript:void(0)" ng-click="toggleChartView(true)">Chart</a></li>
-                <li ng-class="{active: !chartView}"><a href="javascript:void(0)" ng-click="toggleChartView(false)">List view</a></li>
-                <li><a href="javascript:void(0)" ng-href="{{ selectedCoordinator.log_url }}" target="_blank">Display log</a></li>
-              </ul>
+              
             </div>
             <div class="clearfix"></div>-->
             <div class="row">
@@ -135,6 +131,14 @@
                 </table>-->
               </div>
               <div class="col-md-8">
+                <div class="col-md-5 pull-right">
+                  <ul class="nav nav-pills" id="chart-nav">
+                    <li ng-class="{active: chartView}"><a href="javascript:void(0)" ng-click="toggleChartView(true)">Chart</a></li>
+                    <li ng-class="{active: !chartView}"><a href="javascript:void(0)" ng-click="toggleChartView(false)">List view</a></li>
+                    <li><a href="javascript:void(0)" ng-href="{{ selectedCoordinator.log_url }}" target="_blank">Display log</a></li>
+                  </ul>
+                </div>
+                <div class="clearfix"></div>
                 <div ng-show="!chartView">
                   <div class="text-center">
                     <span class="btn glyphicon glyphicon-arrow-left" ng-click="slideRange(-1)"></span>
