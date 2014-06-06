@@ -162,34 +162,36 @@
                     <span class="btn glyphicon glyphicon-arrow-right" ng-click="slideRange(1)"></span>
                     <span class="btn glyphicon today" ng-click="setToday()">Today</span>
                   </div>
-                  <table class="top-15">
-                    <thead>
-                      <tr>
-                        <th>Datetime</th>
-                        <th>Battery voltage</th>
-                        <th>Temperature</th>
-                        <th>Humidity</th>
-                        <th>Radio quality</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr ng-repeat="tick in paginatedTicks">
-                        <td ng-bind="tick.datetime | human_date"></td>
-                        <td ng-bind="tick.battery_voltage_visual | number"></td>
-                        <td ng-bind="tick.temperature | number"></td>
-                        <td ng-bind="tick.sensor2"></td>
-                        <td ng-bind="tick.radio_quality"></td>
-                      </tr>
-                    </tbody>
-                  </table>
-                  <div ng-show="pages > 0">
-                    <ul class="pagination">
-                      <li ng-class="{disabled: page==1}"><a href="javascript:void(0)" ng-click="setPage(1)">First page</a></li>
-                      <li ng-class="{disabled: page-1<1}"><a href="javascript:void(0)" ng-click="setPage(page-1)">Previous</a></li>
-                      <li ng-class="{disabled: page+1>pages}"><a href="javascript:void(0)" ng-click="setPage(page+1)">Next</a></li>
-                      <li ng-class="{disabled: page==pages}"><a href="javascript:void(0)" ng-click="setPage(pages)">Last page</a></li>
+                  <div class="table-responsive">
+                    <table class="top-15 table table-striped">
+                      <thead>
+                        <tr>
+                          <th>Datetime</th>
+                          <th>Battery voltage</th>
+                          <th>Temperature</th>
+                          <th>Humidity</th>
+                          <th>Radio quality</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr ng-repeat="tick in paginatedTicks">
+                          <td ng-bind="tick.datetime | human_date"></td>
+                          <td ng-bind="tick.battery_voltage_visual | number"></td>
+                          <td ng-bind="tick.temperature | number"></td>
+                          <td ng-bind="tick.sensor2"></td>
+                          <td ng-bind="tick.radio_quality"></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div ng-show="pages > 0" class="text-center">
+                    <ul class="pagination pagination-sm">
+                      <li ng-class="{disabled: page-1<1}"><a href="javascript:void(0)" ng-click="setPage(page-1)">&laquo;</a></li>
+                      <li ng-repeat="p in pageRange()" ng-class="{active: p == page}">
+                        <a href="javascript:void(0)" ng-click="setPage(p)" ng-bind="p"></a>
+                      </li>
+                      <li ng-class="{disabled: page+1>pages}"><a href="javascript:void(0)" ng-click="setPage(page+1)">&raquo;</a></li>
                     </ul>
-                    <span>Page {{ page }} / {{ pages }}</span>
                   </div>
                 </div><!-- list view -->
                 <div ng-show="chartView">

@@ -190,6 +190,9 @@ ui.controller "MainController", ($scope, $http, $location, $filter) ->
     end = start+kPageSize
     $scope.paginatedTicks = $scope.ticks.slice start, end
 
+  $scope.pageRange = () ->
+    [1..$scope.pages]
+
 # Filters are to be used in HTML markup only
 ui.filter 'human_date', -> (value) -> 
   time = moment(value)
