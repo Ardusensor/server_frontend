@@ -17,7 +17,7 @@ uiCharts.putData = (labels, data, container, chart, min, max, name) ->
 		element: elm,
 		renderer: 'line',
 		height: 200,
-		width: 600,
+		width: 700,
 		min: min,
 		max: max,
 		series: [
