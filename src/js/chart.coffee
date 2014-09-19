@@ -39,7 +39,7 @@ uiCharts.putData = (temp, hue, container, sensorName) ->
   chart = new Rickshaw.Graph(
     element: document.querySelector(container + " .chart"),
     renderer: 'multi',
-    height: 200,
+    height: 400,
     width: window.innerWidth - 165,
     dotSize: 5,
     pixelsPerTick: 20,
@@ -48,7 +48,7 @@ uiCharts.putData = (temp, hue, container, sensorName) ->
         name: "Temperature (" + sensorName + ")",
         data: temp,
         color: "#c05020",
-        renderer: 'stack',
+        renderer: 'line',
         scale: d3.scale.linear().domain([temp_min, temp_max]).nice(),
       },
       {
