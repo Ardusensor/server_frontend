@@ -42,6 +42,7 @@ uiCharts.putData = (labels, temp, hue, container, min, max, name) ->
     height: 200,
     width: window.innerWidth - 165,
     dotSize: 5,
+    pixelsPerTick: 20,
     series: [
       {
         name: "Temperature",

@@ -3,6 +3,7 @@ div, span, p, td {
 }
 .chart {
 	display: inline-block;
+	left: 2px;
 }
 #legend {
 	display: inline-block;
