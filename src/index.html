@@ -32,9 +32,6 @@
         <div class="navbar-header">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
             <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
           </button>
           <a class="navbar-brand" href="javascript:void(0)">
             <img src="img/header.svg" height="29" width="122">
@@ -44,24 +41,8 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <p class="navbar-text">
-            Coordinator: <span ng-bind="selectedCoordinator.id"></span>
-            (GSM: <span ng-bind="latestCoordinatorReading.gsm_coverage"></span>
-            Voltage: <span ng-bind="latestCoordinatorReading.battery_voltage | float2"></span>)
+            
           </p>
-          <form class="navbar-form navbar-left">
-            <div class="form-group coordinator-name">
-              <span
-                ng-class="{'label-info': selectedCoordinator.label, 'label-default': !selectedCoordinator.label, 'label': true}"
-                ng-bind="selectedCoordinator.label || 'Add label'"
-                ng-hide="selectedCoordinator.editingLabel"
-                ng-click="selectedCoordinator.editingLabel = true"></span>
-              <input type="text" class="form-control" placeholder="Coordinator label"
-                autofocus="autofocus"
-                ng-model="selectedCoordinator.label"
-                ng-show="selectedCoordinator.editingLabel"
-                ng-blur="saveCoordinatorLabel(selectedCoordinator)">
-            </div>
-          </form>
         </div><!-- /.navbar-collapse -->
       </div><!-- /.container-fluid -->
     </nav>
@@ -74,32 +55,23 @@
         </div>
         <div class="row top-15">
           <div class="col-md-12" ng-show="selectedCoordinator">
-            <div class="row">
-              <div class="col-md-12">
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <span class="glyphicon glyphicon-th"></span>
+                SENSOR DATA
+                <button type="button" class="btn btn-primary">Set up sensors</button>
+              </div>
+              <div class="panel-body">
                 <div ng-show="chartView">
+                  <form role="form" class="form-inline">
+                    <div class="checkbox padded-checkbox" ng-repeat="sensor in sensors">
+                      <label>
+                        <input type="checkbox" ng-checked="selectedSensor==sensor" ng-click="selectSensor(sensor)">
+                        <span ng-bind="sensor.id | last_four"></span>
+                      </label>
+                    </div>
+                  </form>
                   <div id="wait-overlay" ng-show="processing"></div>
-                  <div class="text-center">
-                    <span class="btn glyphicon glyphicon-arrow-left" ng-click="slideRange(-1)"></span>
-                    <span class="selected-range">
-                      <span ng-bind="chartStart | moment_date"></span>
-                       - 
-                      <span ng-bind="chartEnd | moment_date"></span>
-                      <span class="dropdown">
-                        <span class="dropdown-toggle" data-toggle="dropdown">
-                          (<span ng-bind="range"></span><span class="caret"></span>)
-                        </span>
-                        <ul class="dropdown-menu text-left">
-                          <li><a href="javascript:void(0)" ng-click="selectRange('Day')">Day</a></li>
-                          <li><a href="javascript:void(0)" ng-click="selectRange('Week')">Week</a></li>
-                          <li><a href="javascript:void(0)" ng-click="selectRange('Month')">Month</a></li>
-                          <li><a href="javascript:void(0)" ng-click="selectRange('Quarter')">Quarter</a></li>
-                          <li><a href="javascript:void(0)" ng-click="selectRange('Year')">Year</a></li>
-                        </ul>
-                      </span>
-                    </span>
-                    <span class="btn glyphicon glyphicon-arrow-right" ng-click="slideRange(1)"></span>
-                    <span class="btn glyphicon today" ng-click="setToday()">Today</span>
-                  </div>
                   <h4>Temperature</h4><span class="label label-warning"
                     ng-show="!selectedSensor.calibration_constant">Not calibrated</span>
                   <div id="temp" class="chart_container">
