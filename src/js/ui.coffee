@@ -1,7 +1,5 @@
 ui = angular.module 'ui', ->
 
-host = ''
-
 kPageSize = 400
 
 ui.controller "MainController", ($scope, $http, $location, $filter) ->
@@ -13,13 +11,9 @@ ui.controller "MainController", ($scope, $http, $location, $filter) ->
     $scope.chartEnd = (if hashbang.length > 6 then moment.utc(hashbang[6], 'X') else moment())
 
   $scope.setVariablesFromHashbang($location.path().split("/"))
-  
-  #if $location.absUrl().indexOf("file://") != -1
-  #  console.log 'Using local API host'
-  #  host = 'http://localhost:8084'
 
   if $scope.base != ""
-    $http.get(host + '/api/coordinators' + $scope.base).success((data) ->
+    $http.get('/api/coordinators' + $scope.base).success((data) ->
       $scope.selectCoordinator(if data then data else null)
     ).error((data, status, headers, config) ->
       $scope.errorMsg = data or status or "Couldn't find coordinator, please check your URL."
@@ -52,14 +46,14 @@ ui.controller "MainController", ($scope, $http, $location, $filter) ->
     $scope.loadSensorData()
 
   $scope.getLatestCoordinatorReading = (coordinator) ->
-    $http.get(host + '/api/coordinators/' + $scope.selectedCoordinator.id + '/readings?start=0&end=0').success((data) ->
+    $http.get('/api/coordinators/' + $scope.selectedCoordinator.id + '/readings?start=0&end=0').success((data) ->
       $scope.latestCoordinatorReading = data[0]
     )
 
   $scope.selectCoordinator = (coordinator) ->
     $scope.selectedCoordinator = coordinator
     $scope.getLatestCoordinatorReading(coordinator)
-    $http.get(host + '/api/coordinators/' + $scope.selectedCoordinator.id + '/sensors').success (data) ->
+    $http.get('/api/coordinators/' + $scope.selectedCoordinator.id + '/sensors').success (data) ->
       # avoid angular automatic reorder/rerender so we can update currentSensor properties
       $scope.sensors = _.sortBy(data, (x) -> -1 * (moment(x.last_tick).utc()))
       $scope.predicate = 'last_tick'
@@ -79,7 +73,7 @@ ui.controller "MainController", ($scope, $http, $location, $filter) ->
     if not $scope.selectedSensor
       $scope.renderTicks null
       return
-    $http.get(host + '/api/sensors/' + $scope.selectedSensor.id + 
+    $http.get('/api/sensors/' + $scope.selectedSensor.id + 
       '/ticks?start=' + $scope.chartStart.unix() +
       '&end=' + $scope.chartEnd.unix()).success((data) ->
         $scope.renderTicks data
@@ -112,7 +106,7 @@ ui.controller "MainController", ($scope, $http, $location, $filter) ->
     if not $scope.selectedSensor
       $scope.renderDots []
       return
-    $http.get(host + '/api/sensors/' + $scope.selectedSensor.id + 
+    $http.get('/api/sensors/' + $scope.selectedSensor.id + 
       '/dots?start=' + $scope.chartStart.unix() + 
       '&end=' + $scope.chartEnd.unix() +
       '&dots_per_day=' + $scope.dotsPerDay).success((data) ->
@@ -172,11 +166,11 @@ ui.controller "MainController", ($scope, $http, $location, $filter) ->
     $scope.selectRange($scope.range)
 
   $scope.saveCoordinatorLabel = (coordinator) ->
-    $http.put(host + '/api/coordinators/' + coordinator.id, coordinator)
+    $http.put('/api/coordinators/' + coordinator.id, coordinator)
     coordinator.editingLabel = false
 
   $scope.saveSensor = (sensor) ->
-    $http.put(host + '/api/sensors/' + sensor.id, sensor).success((data) ->
+    $http.put('/api/sensors/' + sensor.id, sensor).success((data) ->
       sensor = data
     )
     sensor.calibrating = false
