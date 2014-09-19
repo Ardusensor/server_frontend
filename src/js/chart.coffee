@@ -5,8 +5,24 @@ uiCharts.hueChart = null
 uiCharts.batChart = null
 uiCharts.sigChart = null
 
-uiCharts.putData = (labels, data, container, chart, min, max, name) ->
-	return if data.length == 0
+uiCharts.resizeChart = (chart) ->
+	if chart?
+		chart.configure {
+			width: window.innerWidth * 0.9
+		}
+		chart.render()
+
+resize = () ->
+	uiCharts.resizeChart(uiCharts.tempChart)
+	uiCharts.resizeChart(uiCharts.hueChart)
+	uiCharts.resizeChart(uiCharts.batChart)
+	uiCharts.resizeChart(uiCharts.sigChart)
+		
+
+window.addEventListener 'resize', resize
+
+uiCharts.putData = (labels, data, container, min, max, name) ->
+	return null if data.length == 0
 
 	chart = null
 
@@ -17,7 +33,7 @@ uiCharts.putData = (labels, data, container, chart, min, max, name) ->
 		element: elm,
 		renderer: 'line',
 		height: 200,
-		width: 700,
+		width: window.innerWidth * 0.9,
 		min: min,
 		max: max,
 		series: [
@@ -68,6 +84,8 @@ uiCharts.putData = (labels, data, container, chart, min, max, name) ->
 
 	chart.render()
 
+	return chart
+
 uiCharts.drawChart = (data, done) ->
 	labels = []
 	temp = []
@@ -83,10 +101,10 @@ uiCharts.drawChart = (data, done) ->
 		signal.push({x: (idx + 1), y: (if model.radio_quality? then parseInt(model.radio_quality) else null)})
 	)
 
-	uiCharts.putData(labels, temp, '#temp', uiCharts.tempChart, -20, 40, "Temperature")
-	uiCharts.putData(labels, hue, '#hue', uiCharts.hueChart, 500, 1400, "Humidity")
-	uiCharts.putData(labels, battery, '#battery', uiCharts.batChart, 2.5, 3.5, "Battery")
-	uiCharts.putData(labels, signal, '#signal', uiCharts.sigChart, "auto", "auto", "Signal strength")
+	uiCharts.tempChart = uiCharts.putData(labels, temp, '#temp', -20, 40, "Temperature")
+	uiCharts.hueChart = uiCharts.putData(labels, hue, '#hue', 500, 1400, "Humidity")
+	uiCharts.batChart = uiCharts.putData(labels, battery, '#battery', 2.5, 3.5, "Battery")
+	uiCharts.sigChart = uiCharts.putData(labels, signal, '#signal', "auto", "auto", "Signal strength")
 
 	if done?
 		done()

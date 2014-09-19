@@ -25,7 +25,6 @@
       <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
   </head>
-
   <body ng-controller="MainController" ng-cloak>
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
       <div class="container-fluid">
@@ -76,124 +75,7 @@
         <div class="row top-15">
           <div class="col-md-12" ng-show="selectedCoordinator">
             <div class="row">
-              <div class="col-md-3">
-                <ul class="list-group" id="sensors-list">
-                  <a
-                    class="list-group-item"
-                    ng-repeat="sensor in sensors"
-                    ng-click="selectSensor(sensor)"
-                    ng-href="index.html#{{sensor | valid_uri:this}}" 
-                    ng-class="{active: selectedSensor==sensor}">
-                      <span ng-bind="sensor.id | last_four"></span>
-                      <span ng-bind="sensor.last_tick | human_date"></span>
-                      <span class="label label-info" ng-bind="sensor.label"></span>
-                      <span class="glyphicon glyphicon-warning-sign" ng-show="!sensor.calibration_constant"></span>
-                  </a>
-                </ul>
-              </div>
-              <div class="col-md-9">
-                <div class="col-md-5">
-                  <button 
-                    type="button"
-                    class="btn btn-primary btn-xs"
-                    ng-click="selectedSensor.editingLabel = true"
-                    ng-hide="selectedSensor.editingLabel || selectedSensor.calibrating">Add label
-                  </button>
-                  <div class="input-group" ng-show="selectedSensor.editingLabel">
-                    <input
-                      type="text"
-                      class="form-control"
-                      placeholder="Sensor label"
-                      autofocus="autofocus"
-                      ng-model="selectedSensor.label"
-                      ng-blur="saveSensor(selectedSensor)"  
-                    >
-                    <span class="input-group-btn">
-                      <button
-                        class="btn btn-default" 
-                        type="button"
-                        ng-click="saveSensor(selectedSensor)">OK</button>
-                    </span>
-                  </div>
-                  <button 
-                    type="button"
-                    class="btn btn-primary btn-xs"
-                    ng-click="selectedSensor.calibrating = true"
-                    ng-hide="selectedSensor.editingLabel || selectedSensor.calibrating">Calibrate
-                  </button>
-                  <div class="input-group" ng-show="selectedSensor.calibrating">
-                    <input type="number" step="0.1" class="form-control" placeholder="0"
-                        autofocus="autofocus"
-                        ng-model="selectedSensor.calibration_constant"
-                        ng-blur="saveSensor(selectedSensor)">
-                    <span class="input-group-btn">
-                      <button class="btn btn-default" type="button" ng-click="saveSensor(selectedSensor)">OK</button>
-                    </span>
-                  </div>
-                </div>
-                <div class="col-md-5 pull-right">
-                  <ul class="nav nav-pills" id="chart-nav">
-                    <li ng-class="{active: chartView}"><a href="javascript:void(0)" ng-click="toggleChartView(true)">Chart</a></li>
-                    <li ng-class="{active: !chartView}"><a href="javascript:void(0)" ng-click="toggleChartView(false)">List view</a></li>
-                    <li><a href="javascript:void(0)" ng-href="{{ selectedCoordinator.log_url }}" target="_blank">Display log</a></li>
-                  </ul>
-                </div>
-                <div class="clearfix"></div>
-                <div ng-show="!chartView">
-                  <div class="text-center">
-                    <span class="btn glyphicon glyphicon-arrow-left" ng-click="slideRange(-1)"></span>
-                    <span class="selected-range">
-                      <span ng-bind="chartStart | moment_date"></span>
-                       - 
-                      <span ng-bind="chartEnd | moment_date"></span>
-                      <span class="dropdown">
-                        <span class="dropdown-toggle" data-toggle="dropdown">
-                          (<span ng-bind="range"></span><span class="caret"></span>)
-                        </span>
-                        <ul class="dropdown-menu text-left">
-                          <li><a href="javascript:void(0)" ng-click="selectRange('Day')">Day</a></li>
-                          <li><a href="javascript:void(0)" ng-click="selectRange('Week')">Week</a></li>
-                          <li><a href="javascript:void(0)" ng-click="selectRange('Month')">Month</a></li>
-                          <li><a href="javascript:void(0)" ng-click="selectRange('Quarter')">Quarter</a></li>
-                          <li><a href="javascript:void(0)" ng-click="selectRange('Year')">Year</a></li>
-                        </ul>
-                      </span>
-                    </span>
-                    <span class="btn glyphicon glyphicon-arrow-right" ng-click="slideRange(1)"></span>
-                    <span class="btn glyphicon today" ng-click="setToday()">Today</span>
-                  </div>
-                  <div class="table-responsive">
-                    <table class="top-15 table table-striped">
-                      <thead>
-                        <tr>
-                          <th>Datetime</th>
-                          <th>Battery voltage</th>
-                          <th>Temperature</th>
-                          <th>Humidity</th>
-                          <th>Radio quality</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr ng-repeat="tick in paginatedTicks">
-                          <td ng-bind="tick.datetime | human_date"></td>
-                          <td ng-bind="tick.battery_voltage_visual | number"></td>
-                          <td ng-bind="tick.temperature | number"></td>
-                          <td ng-bind="tick.sensor2"></td>
-                          <td ng-bind="tick.radio_quality"></td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                  <div ng-show="pages > 0" class="text-center">
-                    <ul class="pagination pagination-sm">
-                      <li ng-class="{disabled: page-1<1}"><a href="javascript:void(0)" ng-click="setPage(page-1)">&laquo;</a></li>
-                      <li ng-repeat="p in pageRange()" ng-class="{active: p == page}">
-                        <a href="javascript:void(0)" ng-click="setPage(p)" ng-bind="p"></a>
-                      </li>
-                      <li ng-class="{disabled: page+1>pages}"><a href="javascript:void(0)" ng-click="setPage(page+1)">&raquo;</a></li>
-                    </ul>
-                  </div>
-                </div><!-- list view -->
+              <div class="col-md-12">
                 <div ng-show="chartView">
                   <div id="wait-overlay" ng-show="processing"></div>
                   <div class="text-center">
