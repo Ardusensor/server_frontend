@@ -14,16 +14,14 @@ body {
 .top-15 {
 	margin-top: 15px;
 }
-.chart {
-  position: relative;
-  left: 40px;
-  display: block;
-}
-.y_axis {
-  position: absolute;
-  top: 0;
-  bottom: 0;
+#axis0 {
   width: 40px;
+}
+#axis1 {
+  width: 40px;
+}
+#slider {
+  left: 40px;
 }
 .x_axis {
   position: relative;

@@ -15,6 +15,7 @@
     <link href="css/graph.css" rel="stylesheet">
     <link href="css/lines.css" rel="stylesheet">
     <link href="css/ui.css" rel="stylesheet">
+    <link href="css/legend.css" rel="stylesheet">
     
     <script src="js/lib/angular.js"></script>
     <script src="js/lib/angular-route.js"></script>
@@ -71,32 +72,15 @@
                       </label>
                     </div>
                   </form>
-                  <div id="wait-overlay" ng-show="processing"></div>
-                  <h4>Temperature</h4><span class="label label-warning"
-                    ng-show="!selectedSensor.calibration_constant">Not calibrated</span>
-                  <div id="temp" class="chart_container">
-                    <div class="y_axis"></div>
-                    <div class="chart"></div>
-                    <div class="x_axis"></div>
+                  <div id="chart" class="chart_container top-15">
+                    <div id="axis0" class="y_axis pull-left"></div>
+                    <div class="chart" class="pull-left"></div>
+                    <div id="axis1" class="y_axis pull-right"></div>
+
+                    <div class="clearfix"></div>
+                    <div id="slider"></div>
                   </div>
-                  <h4>Humidity</h4>
-                  <div id="hue" class="chart_container">
-                    <div class="y_axis"></div>
-                    <div class="chart"></div>
-                    <div class="x_axis"></div>
-                  </div>
-                  <h4>Battery voltage</h4>
-                  <div id="battery" class="chart_container">
-                    <div class="y_axis"></div>
-                    <div class="chart"></div>
-                    <div class="x_axis"></div>
-                  </div>
-                  <h4>Signal strength</h4>
-                  <div id="signal" class="chart_container">
-                    <div class="y_axis"></div>
-                    <div class="chart"></div>
-                    <div class="x_axis"></div>
-                  </div>
+                  <div class="column" id="legend"></div>
                 </div><!-- chart view -->
               </div>
             </div>

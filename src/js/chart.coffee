@@ -1,112 +1,139 @@
 window.uiCharts = {}
 
-uiCharts.tempChart = null
+uiCharts.mainChart = null
 uiCharts.hueChart = null
 uiCharts.batChart = null
 uiCharts.sigChart = null
 
 uiCharts.resizeChart = (chart) ->
-	if chart?
-		chart.configure {
-			width: window.innerWidth * 0.9
-		}
-		chart.render()
+  if chart?
+    chart.configure {
+      width: window.innerWidth - 165
+    }
+    chart.render()
 
 resize = () ->
-	uiCharts.resizeChart(uiCharts.tempChart)
-	uiCharts.resizeChart(uiCharts.hueChart)
-	uiCharts.resizeChart(uiCharts.batChart)
-	uiCharts.resizeChart(uiCharts.sigChart)
-		
+  uiCharts.resizeChart(uiCharts.mainChart)
 
 window.addEventListener 'resize', resize
 
-uiCharts.putData = (labels, data, container, min, max, name) ->
-	return null if data.length == 0
+uiCharts.clearInner = (selector) ->
+  elem = document.querySelector(selector)
+  if elem?
+    elem.innerHTML = ""
 
-	chart = null
+uiCharts.putData = (labels, temp, hue, container, min, max, name) ->
+  return null if temp.length == 0 || hue.length == 0
 
-	elm = document.querySelector(container + " .chart")
-	elm.innerHTML = ""
+  chart = null
 
-	chart = new Rickshaw.Graph(
-		element: elm,
-		renderer: 'line',
-		height: 200,
-		width: window.innerWidth * 0.9,
-		min: min,
-		max: max,
-		series: [
-			data: data,
-			color: "#c05020",
-			name: name
-		]
-	)
+  uiCharts.clearInner(container + " .chart")
 
-	xFormat = (x) ->
-		""
+  temp_min = _.min(_.pluck(temp, 'y'))
+  temp_max = _.max(_.pluck(temp, 'y'))
+  
+  hue_min = _.min(_.pluck(hue, 'y'))
+  hue_max = _.max(_.pluck(hue, 'y'))
 
-	yFormat = (y) ->
-		Math.round(y * 100) / 100
 
-	hoverDetail = new Rickshaw.Graph.HoverDetail(
-		graph: chart,
-		xFormatter: xFormat,
-		yFormatter: yFormat
-	)
+  chart = new Rickshaw.Graph(
+    element: document.querySelector(container + " .chart"),
+    renderer: 'multi',
+    height: 200,
+    width: window.innerWidth - 165,
+    dotSize: 5,
+    series: [
+      {
+        name: "Temperature",
+        data: temp,
+        color: "#c05020",
+        renderer: 'stack',
+        scale: d3.scale.linear().domain([temp_min, temp_max]).nice(),
+      },
+      {
+        name: "Humidity",
+        data: hue,
+        color: "#428bca",
+        renderer: 'line',
+        scale: d3.scale.pow().domain([hue_min, hue_max]).nice()
+      }
+    ]
+  )
 
-	format = (n) ->
-		labels[n]
+  uiCharts.clearInner('#slider')
 
-	xelm = document.querySelector(container + " .x_axis")
-	xelm.innerHTML = ""
+  new Rickshaw.Graph.RangeSlider.Preview({
+    graph: chart,
+    element: document.querySelector('#slider')
+  })
 
-	x_ticks = new Rickshaw.Graph.Axis.X(
-		graph: chart,
-		orientation: 'bottom',
-		element: xelm,
-		ticks: 5,
-		pixelsPerTick: 150,
-		tickFormat: format,
-		width: 750
-	)
+  new Rickshaw.Graph.HoverDetail({
+    graph: chart
+  })
 
-	yelm = document.querySelector(container + ' .y_axis')
-	yelm.innerHTML = ""
+  uiCharts.clearInner('#legend')
 
-	y_ticks = new Rickshaw.Graph.Axis.Y(
-		graph: chart,
-		orientation: 'left',
-		pixelsPerTick: 20,
-		tickFormat: Rickshaw.Fixtures.Number.formatKMBT,
-		element: yelm,
-	)
+  legend = new Rickshaw.Graph.Legend({
+    graph: chart,
+    element: document.querySelector('#legend')
+  })
+  
+  highlighter = new Rickshaw.Graph.Behavior.Series.Highlight({
+    graph: chart,
+    legend: legend,
+    disabledColor: () -> return 'rgba(0, 0, 0, 0.2)'
+  })
 
-	chart.render()
+  highlighter = new Rickshaw.Graph.Behavior.Series.Toggle({
+    graph: chart,
+    legend: legend
+  })
 
-	return chart
+  new Rickshaw.Graph.Axis.Time({
+    graph: chart
+  })
+
+  uiCharts.clearInner('#axis0')
+  uiCharts.clearInner('#axis1')
+
+  new Rickshaw.Graph.Axis.Y.Scaled({
+    element: document.getElementById('axis0'),
+    graph: chart,
+    orientation: 'left',
+    scale: d3.scale.linear().domain([temp_min, temp_max]).nice(),
+    pixelsPerTick: 20
+  })
+
+  new Rickshaw.Graph.Axis.Y.Scaled({
+    element: document.getElementById('axis1'),
+    graph: chart,
+    grid: false,
+    orientation: 'right',
+    scale: d3.scale.pow().domain([hue_min, hue_max]).nice(),
+    tickFormat: Rickshaw.Fixtures.Number.formatKMBT,
+    pixelsPerTick: 20
+  })
+
+  chart.render()
+
+  return chart
 
 uiCharts.drawChart = (data, done) ->
-	labels = []
-	temp = []
-	hue = []
-	battery = []
-	signal = []
+  labels = []
+  temp = []
+  hue = []
+  battery = []
+  signal = []
 
-	_.each(data, (model, idx) ->
-		labels.push(moment(model.datetime).format("DD.MM.YYYY"))
-		temp.push({x: idx, y: (if model.temperature? then parseFloat(model.temperature) else null)})
-		hue.push({x: (idx + 1), y: (if model.sensor2? then parseInt(model.sensor2) else null)})
-		battery.push({x: (idx + 1), y: (if model.battery_voltage_visual? then parseFloat(model.battery_voltage_visual) else null)})
-		signal.push({x: (idx + 1), y: (if model.radio_quality? then parseInt(model.radio_quality) else null)})
-	)
+  _.each(data, (model, idx) ->
+    xlabel = +moment(model.datetime).format('X')
+    temp.push({x: xlabel, y: (if model.temperature? then parseFloat(model.temperature) else null)})
+    hue.push({x: xlabel, y: (if model.sensor2? then parseInt(model.sensor2) else null)})
+  )
 
-	uiCharts.tempChart = uiCharts.putData(labels, temp, '#temp', -20, 40, "Temperature")
-	uiCharts.hueChart = uiCharts.putData(labels, hue, '#hue', 400, 1000, "Humidity")
-	uiCharts.batChart = uiCharts.putData(labels, battery, '#battery', 2.5, 3.5, "Battery")
-	uiCharts.sigChart = uiCharts.putData(labels, signal, '#signal', "auto", "auto", "Signal strength")
+  uiCharts.mainChart = uiCharts.putData(labels, temp, hue, '#chart', -30, 40, "Temperature")
 
-	if done?
-		done()
+  if done?
+    done()
 
-	true
+  true
