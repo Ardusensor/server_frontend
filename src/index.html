@@ -48,6 +48,43 @@
         </div>
       </div>
     </div>
+
+    <div class="modal fade" id="sensorsConfig" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+            <h4 class="modal-title" id="mySmallModalLabel">Sensors settings</h4>
+          </div>
+          <div class="modal-body">
+            <div class="top-15" ng-repeat="sensor in sensors">
+              <form class="form-inline" role="form">
+                <div class="form-group">
+                  <label ng-bind="sensor.id"></label>
+                </div>
+                <div class="form-group">
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="Sensor label"
+                      autofocus="autofocus"
+                      ng-model="sensor.label"
+                      ng-blur="saveSensor(sensor)"  
+                    >
+                </div>
+                <div class="form-group">
+                    <input type="number" step="0.1" class="form-control" placeholder="0"
+                      autofocus="autofocus"
+                      ng-model="sensor.calibration_constant"
+                      ng-blur="saveSensor(sensor)">
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <nav class="navbar navbar-ardusensor navbar-fixed-top" role="navigation">
       <div class="container-fluid">
         <!-- Brand and toggle get grouped for better mobile display -->
@@ -92,7 +129,7 @@
               <div class="panel-heading">
                 <span class="glyphicon glyphicon-th"></span>
                 SENSOR DATA
-                <button type="button" class="btn btn-primary pull-right">Set up sensors</button>
+                <button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#sensorsConfig">Set up sensors</button>
                 <div class="clearfix"></div>
               </div>
               <div class="panel-body">
@@ -101,7 +138,7 @@
                     <div class="checkbox padded-checkbox" ng-repeat="sensor in sensors">
                       <label>
                         <input type="checkbox" ng-checked="selectedSensor==sensor" ng-click="selectSensor(sensor)">
-                        <span ng-bind="sensor.id | last_four"></span>
+                        <span ng-bind="sensor | sensor_label"></span>
                       </label>
                     </div>
                   </form>

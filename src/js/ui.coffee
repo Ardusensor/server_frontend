@@ -197,3 +197,8 @@ ui.filter 'moment_date', -> (value) -> value.format("DD.MM.YYYY")
 ui.filter 'last_four', -> (value) -> value.substr(value.length - 4, 4)
 ui.filter 'valid_uri', -> (sensor, scope) -> scope.buildURI(sensor)
 ui.filter 'float2', -> (value) -> Math.round((if value then (parseFloat(value) / 100) else 0) * 100) / 100
+ui.filter 'sensor_label', -> (sensor) ->
+  if sensor.label? && sensor.label.length > 0
+    sensor.label
+  else
+    sensor.id.substr(sensor.id.length - 4, 4)
