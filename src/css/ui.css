@@ -2,6 +2,23 @@ body {
   padding-top: 50px;
   background: #DDDDDD;
 }
+.navbar-ardusensor {
+  background-color: #fff;
+  border-color: #fff;
+}
+#main-menu {
+  position: absolute;
+  right: 0;
+}
+#main-menu button {
+  border-radius: 0;
+  border: 0;
+  padding-top: 14px;
+  padding-bottom: 13px;
+}
+.navbar-brand {
+  background-color: #428bca;
+}
 .padded-checkbox {
   padding: 0 10px;
 }
