@@ -22,7 +22,7 @@ uiCharts.clearInner = (selector) ->
   if elem?
     elem.innerHTML = ""
 
-uiCharts.putData = (temp, hue, container, min, max, name) ->
+uiCharts.putData = (temp, hue, container) ->
   return null if temp.length == 0 || hue.length == 0
 
   chart = null
@@ -129,7 +129,7 @@ uiCharts.drawChart = (data, done) ->
     hue.push({x: xlabel, y: (if model.sensor2? then parseInt(model.sensor2) else null)})
   )
 
-  uiCharts.mainChart = uiCharts.putData(temp, hue, '#chart', -30, 40, "Temperature")
+  uiCharts.mainChart = uiCharts.putData(temp, hue, '#chart')
 
   if done?
     done()
