@@ -122,7 +122,7 @@ ui.controller "MainController", ($scope, $http, $location, $filter) ->
       return
     $scope.processing = true
     setTimeout(->
-      uiCharts.drawChart data, () ->
+      uiCharts.drawChart data, $filter('last_four')($scope.selectedSensor.id), () ->
         $scope.$apply(()->
           $scope.processing = false
         )

@@ -22,7 +22,7 @@ uiCharts.clearInner = (selector) ->
   if elem?
     elem.innerHTML = ""
 
-uiCharts.putData = (temp, hue, container) ->
+uiCharts.putData = (temp, hue, container, sensorName) ->
   return null if temp.length == 0 || hue.length == 0
 
   chart = null
@@ -45,14 +45,14 @@ uiCharts.putData = (temp, hue, container) ->
     pixelsPerTick: 20,
     series: [
       {
-        name: "Temperature",
+        name: "Temperature (" + sensorName + ")",
         data: temp,
         color: "#c05020",
         renderer: 'stack',
         scale: d3.scale.linear().domain([temp_min, temp_max]).nice(),
       },
       {
-        name: "Humidity",
+        name: "Humidity (" + sensorName + ")",
         data: hue,
         color: "#428bca",
         renderer: 'line',
@@ -119,7 +119,7 @@ uiCharts.putData = (temp, hue, container) ->
 
   return chart
 
-uiCharts.drawChart = (data, done) ->
+uiCharts.drawChart = (data, sensorName, done) ->
   temp = []
   hue = []
 
@@ -129,7 +129,7 @@ uiCharts.drawChart = (data, done) ->
     hue.push({x: xlabel, y: (if model.sensor2? then parseInt(model.sensor2) else null)})
   )
 
-  uiCharts.mainChart = uiCharts.putData(temp, hue, '#chart')
+  uiCharts.mainChart = uiCharts.putData(temp, hue, '#chart', sensorName)
 
   if done?
     done()
