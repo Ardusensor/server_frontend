@@ -1,6 +1,6 @@
 ui = angular.module 'ui', ->
 
-host = 'http://ardusensor.com'
+host = ''
 
 kPageSize = 400
 

@@ -1,2 +1,4 @@
 src/js/*.js
 public
+node_modules
+dist
