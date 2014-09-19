@@ -43,3 +43,6 @@ dist/favicon.ico: dist
 
 dist:
 	mkdir -p dist
+
+watch:
+	@coffee -wc src
