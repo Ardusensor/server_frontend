@@ -12,7 +12,7 @@ default: run
 run:
 	@coffee --nodejs --stack_size=4096 server/index.coffee
 
-release: $(IMAGES_OUTPUT) $(OUTPUTMISCFILES) coffee node_modules
+release: $(IMAGES_OUTPUT) $(OUTPUTMISCFILES) dist/index.html coffee node_modules
 	@echo $(IMAGES_OUTPUT)
 	@echo $(OUTPUTMISCFILES)
 	@echo > /dev/null
@@ -46,3 +46,9 @@ dist:
 
 watch:
 	@coffee -wc src
+
+clean:	
+	rm -rf out public
+
+assets: clean
+	coffee -c src && rsync -a src public --exclude *.coffee && mv public/src public/assets
