@@ -100,3 +100,6 @@ table {
 #chart-nav li {
 	min-width: 0;
 }
+.noborder th, .noborder td {
+  border: 0 !important;
+}

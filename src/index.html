@@ -57,29 +57,45 @@
             <h4 class="modal-title" id="mySmallModalLabel">Sensors settings</h4>
           </div>
           <div class="modal-body">
-            <div class="top-15" ng-repeat="sensor in sensors">
-              <form class="form-inline" role="form">
-                <div class="form-group">
-                  <label ng-bind="sensor.id"></label>
-                </div>
-                <div class="form-group">
-                    <input
-                      type="text"
-                      class="form-control"
-                      placeholder="Sensor label"
-                      autofocus="autofocus"
-                      ng-model="sensor.label"
-                      ng-blur="saveSensor(sensor)"  
-                    >
-                </div>
-                <div class="form-group">
-                    <input type="number" step="0.1" class="form-control" placeholder="0"
-                      autofocus="autofocus"
-                      ng-model="sensor.current_temperature"
-                      ng-blur="saveSensor(sensor)">
-                </div>
-              </form>
-            </div>
+            <table class="table noborder">
+              <thead>
+                <tr>
+                  <th>&nbsp;</th>
+                  <th>Sensor label</th>
+                  <th>Calibration temp</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="sensor in sensors">
+                  <td>
+                    <span ng-bind="sensor.id"></span>
+                  </td>
+                  <td>
+                    <form class="form-inline" role="form">
+                      <div class="form-group">
+                        <input
+                          type="text"
+                          class="form-control"
+                          placeholder="Sensor label"
+                          autofocus="autofocus"
+                          ng-model="sensor.label"
+                          ng-blur="saveSensor(sensor)">
+                      </div>
+                    </form>
+                  </td>
+                  <td>
+                    <form class="form-inline" role="form">
+                      <div class="form-group">
+                        <input type="number" step="0.1" class="form-control" placeholder="0"
+                          autofocus="autofocus"
+                          ng-model="sensor.current_temperature"
+                          ng-blur="saveSensor(sensor)">
+                      </div>
+                    </form>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
