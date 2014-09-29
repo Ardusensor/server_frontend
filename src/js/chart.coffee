@@ -43,7 +43,7 @@ uiCharts.putData = (temp, hue, container, sensorName) ->
         name: "Temperature (" + sensorName + ")",
         data: temp,
         color: "#c05020",
-        renderer: 'scatterplot',
+        renderer: 'area',
         ident: "temp",
       },
       {
