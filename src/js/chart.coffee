@@ -29,13 +29,6 @@ uiCharts.putData = (temp, hue, container, sensorName) ->
 
   uiCharts.clearInner(container + " .chart")
 
-  temp_min = _.min(_.pluck(temp, 'y'))
-  temp_max = _.max(_.pluck(temp, 'y'))
-  
-  hue_min = _.min(_.pluck(hue, 'y'))
-  hue_max = _.max(_.pluck(hue, 'y'))
-
-
   chart = new Rickshaw.Graph(
     element: document.querySelector(container + " .chart"),
     renderer: 'multi',
@@ -43,20 +36,22 @@ uiCharts.putData = (temp, hue, container, sensorName) ->
     width: window.innerWidth - 165,
     dotSize: 5,
     pixelsPerTick: 20,
+    max: 40,
+    min: -30,
     series: [
       {
         name: "Temperature (" + sensorName + ")",
         data: temp,
         color: "#c05020",
-        renderer: 'line',
-        scale: d3.scale.linear().domain([temp_min, temp_max]).nice(),
+        renderer: 'scatterplot',
+        ident: "temp",
       },
       {
         name: "Humidity (" + sensorName + ")",
         data: hue,
         color: "#428bca",
         renderer: 'line',
-        scale: d3.scale.pow().domain([hue_min, hue_max]).nice()
+        ident: "hue",
       }
     ]
   )
@@ -69,7 +64,12 @@ uiCharts.putData = (temp, hue, container, sensorName) ->
   })
 
   new Rickshaw.Graph.HoverDetail({
-    graph: chart
+    graph: chart,
+    #yFormatter: (y) -> (y + 30) * 8.6 + 400
+    formatter: (series, x, y, formattedX, formattedY, d) ->
+      if series.ident? && series.ident == 'hue'
+        formattedY = (y + 30) * 8.6 + 400
+      return series.name + ':&nbsp;' + formattedY
   })
 
   uiCharts.clearInner('#legend')
@@ -97,22 +97,21 @@ uiCharts.putData = (temp, hue, container, sensorName) ->
   uiCharts.clearInner('#axis0')
   uiCharts.clearInner('#axis1')
 
-  new Rickshaw.Graph.Axis.Y.Scaled({
+  new Rickshaw.Graph.Axis.Y({
     element: document.getElementById('axis0'),
     graph: chart,
     orientation: 'left',
-    scale: d3.scale.linear().domain([temp_min, temp_max]).nice(),
     pixelsPerTick: 20
   })
 
-  new Rickshaw.Graph.Axis.Y.Scaled({
+  new Rickshaw.Graph.Axis.Y({
     element: document.getElementById('axis1'),
     graph: chart,
     grid: false,
     orientation: 'right',
-    scale: d3.scale.pow().domain([hue_min, hue_max]).nice(),
     tickFormat: Rickshaw.Fixtures.Number.formatKMBT,
-    pixelsPerTick: 20
+    pixelsPerTick: 20,
+    tickFormat: (y) -> (y + 30) * 8.6 + 400
   })
 
   chart.render()
@@ -126,7 +125,7 @@ uiCharts.drawChart = (data, sensorName, done) ->
   _.each(data, (model, idx) ->
     xlabel = +moment(model.datetime).format('X')
     temp.push({x: xlabel, y: (if model.temperature? then parseFloat(model.temperature) else null)})
-    hue.push({x: xlabel, y: (if model.sensor2? then parseInt(model.sensor2) else null)})
+    hue.push({x: xlabel, y: (if model.sensor2? then ((parseInt(model.sensor2) - 400) / 8.6 - 30) else null)})
   )
 
   uiCharts.mainChart = uiCharts.putData(temp, hue, '#chart', sensorName)

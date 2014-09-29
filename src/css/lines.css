@@ -20,3 +20,6 @@ div, span, p, td {
 .chart_container {
 	position: relative;
 }
+#chart {
+	position: relative;
+}
