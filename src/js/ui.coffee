@@ -23,7 +23,7 @@ ui.controller "MainController", ($scope, $http, $location, $filter) ->
   $scope.ticks = []
   $scope.page = 1
   $scope.pages = 1
-  $scope.dotsPerDay = 48
+  $scope.dotsPerDay = 24
   $scope.errorMsg = null
   $scope.latestCoordinatorReading = null
 
@@ -154,7 +154,7 @@ ui.controller "MainController", ($scope, $http, $location, $filter) ->
     switch $scope.range
       when 'Year' then $scope.dotsPerDay = 1
       when 'Quarter' then $scope.dotsPerDay = 4
-      when 'Month' then $scope.dotsPerDay = 48
+      when 'Month' then $scope.dotsPerDay = 24
       when 'Day' then $scope.dotsPerDay = 24
       when 'Week' then $scope.dotsPerDay = 24
       else $scope.dotsPerDay = null
