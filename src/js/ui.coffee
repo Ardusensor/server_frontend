@@ -23,7 +23,7 @@ ui.controller "MainController", ($scope, $http, $location, $filter) ->
   $scope.ticks = []
   $scope.page = 1
   $scope.pages = 1
-  $scope.dotsPerDay = 12
+  $scope.dotsPerDay = 48
   $scope.errorMsg = null
   $scope.latestCoordinatorReading = null
 
