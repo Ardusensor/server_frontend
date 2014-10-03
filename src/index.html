@@ -61,6 +61,7 @@
               <thead>
                 <tr>
                   <th>&nbsp;</th>
+                  <th>Radio signal</th>
                   <th>Sensor label</th>
                   <th>Calibration temp</th>
                 </tr>
@@ -69,6 +70,9 @@
                 <tr ng-repeat="sensor in sensors">
                   <td>
                     <span ng-bind="sensor.id"></span>
+                  </td>
+                  <td>
+                    <span ng-bind="rssi_packet(sensor)"></span>
                   </td>
                   <td>
                     <form class="form-inline" role="form">

@@ -64,6 +64,13 @@ ui.controller "MainController", ($scope, $http, $location, $filter) ->
       $scope.errorMsg = data or status or "Couldn't load chart data from backend."
     )
 
+  $scope.rssi_packet = (sensor) ->
+    readings = _.first(_.where($scope.latestCoordinatorReading.sensor_readings, {sensor_id: sensor.id}))
+    if readings?
+      readings.packet_rssi
+    else
+      "-"
+
   $scope.loadSensors = ->
     _.each($scope.sensors, (sensor) -> $scope.dotsForSensor(sensor))
 
