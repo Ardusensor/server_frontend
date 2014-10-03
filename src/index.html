@@ -150,14 +150,6 @@
               </div>
               <div class="panel-body">
                 <div ng-show="chartView">
-                  <form role="form" class="form-inline">
-                    <div class="checkbox padded-checkbox" ng-repeat="sensor in sensors">
-                      <label>
-                        <input type="checkbox" ng-checked="selectedSensor==sensor" ng-click="selectSensor(sensor)">
-                        <span ng-bind="sensor | sensor_label"></span>
-                      </label>
-                    </div>
-                  </form>
                   <div class="column" id="legend"></div>
                   <div id="chart" class="chart_container top-15">
                     <div id="axis0" class="y_axis pull-left"></div>
