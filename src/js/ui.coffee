@@ -61,6 +61,7 @@ ui.controller "MainController", ($scope, $http, $location, $filter) ->
         sensor = $scope.findbyID $scope.sensors, $scope.sensor_url
       else
         sensor = if $scope.sensors.length > 0 then $scope.sensors[0] else null
+      $scope.loadSensors()
       $scope.selectSensor(sensor)
 
   $scope.findbyID = (input, id) ->
@@ -116,6 +117,29 @@ ui.controller "MainController", ($scope, $http, $location, $filter) ->
       $scope.errorMsg = data or status or "Couldn't load chart data from backend."
     )
 
+  $scope.renderDotsForSensor = (sensor) ->
+    $scope.processing = true
+    setTimeout(->
+      uiCharts.drawChart sensor.dots, $filter('sensor_label')(sensor), () ->
+        $scope.$apply(()->
+          $scope.processing = false
+        )
+    , 0)
+
+  $scope.dotsForSensor = (sensor) ->
+    $http.get('/api/sensors/' + sensor.id + 
+      '/dots?start=' + moment().subtract(1, 'month').unix() + 
+      '&end=' + moment().unix() +
+      '&dots_per_day=' + $scope.dotsPerDay).success((data) ->
+        sensor.dots = data
+        $scope.renderDotsForSensor(sensor)
+    ).error((data, status, headers, config) ->
+      $scope.errorMsg = data or status or "Couldn't load chart data from backend."
+    )
+
+  $scope.loadSensors = ->
+    _.each($scope.sensors, (sensor) -> $scope.dotsForSensor(sensor))
+
   $scope.renderDots = (data) ->
     if not data?
       $scope.errorMsg = "Backend didn't return any usable data"
@@ -142,7 +166,8 @@ ui.controller "MainController", ($scope, $http, $location, $filter) ->
   $scope.selectSensor = (sensor) ->
     $scope.setURI(sensor)
     $scope.selectedSensor = sensor
-    $scope.loadSensorData()
+    #$scope.loadSensorData()
+    true
 
   $scope.toggleChartView = (active) ->
     $scope.chartView = active

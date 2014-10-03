@@ -1,9 +1,7 @@
 window.uiCharts = {}
 
 uiCharts.mainChart = null
-uiCharts.hueChart = null
-uiCharts.batChart = null
-uiCharts.sigChart = null
+uiCharts.series = []
 
 uiCharts.resizeChart = (chart) ->
   if chart?
@@ -22,12 +20,16 @@ uiCharts.clearInner = (selector) ->
   if elem?
     elem.innerHTML = ""
 
-uiCharts.putData = (temp, hue, container, sensorName) ->
-  return null if temp.length == 0 || hue.length == 0
+uiCharts.palette = new Rickshaw.Color.Palette( { scheme: 'munin' } )
 
+uiCharts.initChart = (container) ->
   chart = null
 
   uiCharts.clearInner(container + " .chart")
+  uiCharts.clearInner('#slider')
+  uiCharts.clearInner('#legend')
+  uiCharts.clearInner('#axis0')
+  uiCharts.clearInner('#axis1')
 
   chart = new Rickshaw.Graph(
     element: document.querySelector(container + " .chart"),
@@ -38,25 +40,22 @@ uiCharts.putData = (temp, hue, container, sensorName) ->
     pixelsPerTick: 20,
     max: 40,
     min: -30,
-    series: [
-      {
-        name: "Temperature (" + sensorName + ")",
-        data: temp,
-        color: "#c05020",
-        renderer: 'line',
-        ident: "temp",
-      },
-      {
-        name: "Humidity (" + sensorName + ")",
-        data: hue,
-        color: "#428bca",
-        renderer: 'line',
-        ident: "hue",
-      }
-    ]
+    series: uiCharts.series
   )
 
+  chart.render()
+
+  return chart
+
+uiCharts.addSeries = (series) ->
   uiCharts.clearInner('#slider')
+  uiCharts.clearInner('#legend')
+  uiCharts.clearInner('#axis0')
+  uiCharts.clearInner('#axis1')
+
+  uiCharts.series.push(series)
+
+  chart = uiCharts.mainChart
 
   new Rickshaw.Graph.RangeSlider.Preview({
     graph: chart,
@@ -72,30 +71,25 @@ uiCharts.putData = (temp, hue, container, sensorName) ->
       return series.name + ':&nbsp;' + formattedY
   })
 
-  uiCharts.clearInner('#legend')
-
   legend = new Rickshaw.Graph.Legend({
     graph: chart,
     element: document.querySelector('#legend')
   })
   
-  highlighter = new Rickshaw.Graph.Behavior.Series.Highlight({
+  new Rickshaw.Graph.Behavior.Series.Highlight({
     graph: chart,
     legend: legend,
     disabledColor: () -> return 'rgba(0, 0, 0, 0.2)'
   })
 
-  highlighter = new Rickshaw.Graph.Behavior.Series.Toggle({
+  new Rickshaw.Graph.Behavior.Series.Toggle({
     graph: chart,
     legend: legend
   })
 
   new Rickshaw.Graph.Axis.Time({
-    graph: chart
+    graph: uiCharts.mainChart
   })
-
-  uiCharts.clearInner('#axis0')
-  uiCharts.clearInner('#axis1')
 
   new Rickshaw.Graph.Axis.Y({
     element: document.getElementById('axis0'),
@@ -114,9 +108,10 @@ uiCharts.putData = (temp, hue, container, sensorName) ->
     tickFormat: (y) -> (y + 30) * 8.6 + 400
   })
 
-  chart.render()
+  uiCharts.mainChart.update()
 
   return chart
+
 
 uiCharts.drawChart = (data, sensorName, done) ->
   temp = []
@@ -128,7 +123,34 @@ uiCharts.drawChart = (data, sensorName, done) ->
     hue.push({x: xlabel, y: (if model.sensor2? then ((parseInt(model.sensor2) - 400) / 8.6 - 30) else null)})
   )
 
-  uiCharts.mainChart = uiCharts.putData(temp, hue, '#chart', sensorName)
+  unless uiCharts.mainChart?
+    uiCharts.series = [
+      {
+        name: "Temperature (" + sensorName + ")",
+        data: temp,
+        color: uiCharts.palette.color(),
+        renderer: 'line',
+        ident: "temp",
+      }
+    ]
+
+    uiCharts.mainChart = uiCharts.initChart('#chart')
+  else
+    uiCharts.addSeries({
+        name: "Temperature (" + sensorName + ")",
+        data: temp,
+        color: uiCharts.palette.color(),
+        renderer: 'line',
+        ident: "temp",
+      })
+
+  uiCharts.addSeries({
+      name: "Humidity (" + sensorName + ")",
+      data: hue,
+      color: uiCharts.palette.color(),
+      renderer: 'line',
+      ident: "hue",
+    })
 
   if done?
     done()
